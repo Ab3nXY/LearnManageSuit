@@ -2,7 +2,7 @@
 <html lang="en">
 	{% load static %}
     <head>
-        <title>Sign In | Event Calendar</title>
+        <title>Sign In | College Mastermind</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
@@ -20,24 +20,14 @@
                         <div class="wrap d-md-flex">
                             <div class="text-wrap p-4 p-lg-5 d-flex img" style="background-image: url({% static 'images/bg.jpg' %});">
                                 <div class="text w-100">
-                                    <h2 class="mb-4">Welcome to Event Calendar</h2>
-                                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                                    <h2 class="mb-4">Welcome to College Mastermind</h2>
+                                    <p>Embark on a transformative educational journey with College Mastermind, where knowledge meets innovation and opportunities abound.</p>
                                 </div>
                             </div>
                             <div class="login-wrap p-4 p-md-5">
                                 <div class="row justify-content-center py-md-5">
                                     <div class="col-lg-9">
-                                        <div class="social-wrap">
-                                            <h3 class="mb-3 text-center">Signin with this services</h3>
-                                            <p class="social-media d-flex justify-content-center">
-                                                <a href="#" class="social-icon google d-flex align-items-center justify-content-center"><span class="fa fa-google"></span></a>
-                                                <a href="#" class="social-icon facebook d-flex align-items-center justify-content-center"><span class="fa fa-facebook"></span></a>
-                                                <a href="#" class="social-icon twitter d-flex align-items-center justify-content-center"><span class="fa fa-twitter"></span></a>
-                                            </p>
-                                            <p class="or">
-                                                <span>or</span>
-                                            </p>
-                                        </div>
+
                                         <form action="#" method="post" class="signup-form">
                                             {% csrf_token %}
                                             <div class="row">
@@ -57,11 +47,24 @@
                                                     <div class="form-group">
                                                         <button type="submit" class="btn btn-primary">Sign In</button>
                                                     </div>
+                                                    <div class="social-wrap">
+                                                    <p class="or">
+                                                        <span>or</span>
+                                                    </p>
+                                                    </div>
+                                                    
+
+                                                    <h3 class="mb-3 text-center">Signin with this services</h3>
+                                                    <p class="social-media d-flex justify-content-center">
+                                                        <a href="#" class="social-icon google d-flex align-items-center justify-content-center"><span class="fa fa-google"></span></a>
+                                                        <a href="#" class="social-icon facebook d-flex align-items-center justify-content-center"><span class="fa fa-facebook"></span></a>
+                                                        <a href="#" class="social-icon twitter d-flex align-items-center justify-content-center"><span class="fa fa-twitter"></span></a>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </form>
                                         <div class="w-100">
-                                            <p class="mt-4">New in event calendar? <a href="{% url 'accounts:signup' %}">Sign Up</a></p>
+                                            <p class="mt-4">If you don't have account yet <a href="{% url 'accounts:signup' %}">Sign Up</a> here</p>
                                         </div>
                                     </div>
                                 </div>
