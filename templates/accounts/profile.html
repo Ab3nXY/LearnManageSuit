@@ -1,0 +1,30 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock title %}
+
+{% block content %}
+<h1>Update Your Profile</h1>
+{% if profile_updated %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>Profile updated successfully!</strong>
+    </div>
+    <script>
+        setTimeout(function() {
+            $('.alert').alert('close');
+        }, 5000);
+    </script>
+{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+
+    <img src="{% if user.image %}{{ user.image.url }}{% else %}{{ MEDIA_URL }}profile_pics/default.jpg{% endif %}"
+         alt="Profile Picture"  style="border: 5px solid green; border-radius: 50%; overflow: hidden; width: 80px; height: 80px;" class="circular-frame" height="80px" width="80px">
+    <br>
+    <br>
+
+    <button type="submit" class="btn btn-primary">Update Profile</button>
+</form>
+
+{% endblock content %}

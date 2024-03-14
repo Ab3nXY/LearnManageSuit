@@ -5,6 +5,7 @@ from django.contrib.auth.models import (
     PermissionsMixin,
 )
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
 
 class UserManager(BaseUserManager):
@@ -47,14 +48,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     email = models.EmailField(
         _("Email Address"),
-        max_length=255,
+        max_length=150,
         unique=True,
-        help_text="Ex: example@example.com",
     )
     is_staff = models.BooleanField(_("Staff status"), default=False)
     is_active = models.BooleanField(_("Active"), default=True)
     date_joined = models.DateTimeField(_("Date Joined"), auto_now_add=True)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True)
+    first_name = models.CharField(_("First Name"), max_length=150, blank=True)
+    last_name = models.CharField(_("Last Name"), max_length=150, blank=True)
+    image = models.ImageField(default='profile_pic/default.jpg', upload_to='profile_pics')
 
     objects = UserManager()
 
@@ -62,3 +65,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE) # Delete profile when user is deleted
+
+
+    def __str__(self):
+        return f'{self.user.first_name} Profile' #show how we want it to be displayed

@@ -15,7 +15,8 @@ from django.shortcuts import get_object_or_404
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
-
+from django.contrib.auth.models import User
+from accounts.models import User
 
 def get_date(req_day):
     if req_day:
@@ -130,9 +131,9 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     "description": event.description,
                 }
             )
-        
+        staff_members = User.objects.filter(is_staff=True).select_related('profile')
         context = {"form": forms, "events": event_list,
-                   "events_month": events_month}
+                   "events_month": events_month, "staff_members": staff_members}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -179,3 +180,4 @@ def next_day(request, event_id):
         return JsonResponse({'message': 'Sucess!'})
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
+    

@@ -2,18 +2,6 @@
 <html lang="en">
     {% load static %}
     <head>
-        <meta name="description" content="Event Dashboard" />
-        <!-- Twitter meta-->
-        <meta property="twitter:card" content="summary_large_image" />
-        <meta property="twitter:site" content="@sajib1066" />
-        <meta property="twitter:creator" content="@sajib1066" />
-        <!-- Open Graph Meta-->
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="Vali Admin" />
-        <meta property="og:title" content="Vali - Free Bootstrap 4 admin theme" />
-        <meta property="og:url" content="https://sajib1066.github.io/" />
-        <meta property="og:image" content="https://sajib1066.github.io/images/me.jpg" />
-        <meta property="og:description" content="Event Dashboard" />
         <title>{% block title %}{% endblock title  %}</title>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -22,6 +10,7 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}" />
         <!-- Font-icon css-->
         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+        <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
         {% block extracss %}
         {% endblock extracss %}
     </head>
@@ -123,7 +112,7 @@
                             <a class="dropdown-item" href="#"><i class="fa fa-cog fa-lg"></i> Settings</a>
                         </li>
                         <li>
-                            <a class="dropdown-item" href="#"><i class="fa fa-user fa-lg"></i> Profile</a>
+                            <a class="dropdown-item" href="{% url 'accounts:profile' %}"><i class="fa fa-user fa-lg"></i> Profile</a>
                         </li>
                         <li>
                             <a class="dropdown-item" href="{% url 'accounts:signout' %}"><i class="fa fa-sign-out fa-lg"></i> Sign Out</a>
@@ -136,7 +125,8 @@
         <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
         <aside class="app-sidebar">
             <div class="app-sidebar__user">
-                <img src="{% static 'images/cl.png' %}" alt="User Image" height="60px" width="60px"/>
+                <img src="{% if user.image %}{{ user.image.url}}{% else %}{% static 'profile_pics/default.jpg' %}{% endif %}"
+                alt="Profile Picture" style="border-radius: 50%; overflow: hidden; width: 80px; height: 80px;" class="circular-frame" height="80px" width="80px">
                 <div>
                     <p class="app-sidebar__user-name" style="margin-left: 1em;">College</p>
                     <p class="app-sidebar__user-designation" style="margin-left: 1em;">Mastermind</p>
@@ -144,7 +134,7 @@
             </div>
             <ul class="app-menu">
                 <li>
-                    <a class="app-menu__item active" href="{% url 'dashboard' %}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a>
+                    <a class="app-menu__item" href="{% url 'dashboard' %}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a>
                 </li>
                 <li>
                     <a class="app-menu__item" href="{% url 'calendarapp:calendar' %}"><i class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Calendar</span></a>

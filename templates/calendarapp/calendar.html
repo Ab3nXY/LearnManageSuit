@@ -11,6 +11,7 @@
       <h1><i class="fa fa-calendar"></i> Calendar</h1>
       <p>Event Calendar</p>
   </div>
+
   <ul class="app-breadcrumb breadcrumb">
       <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
       <li class="breadcrumb-item"><a href="#">Calendar</a></li>
@@ -18,6 +19,12 @@
 {% endblock breadcrumb %}
 
 {% block content %}
+
+{% if user.is_superuser %}  
+  <h4 class="mb-2">Staff Members</h4>
+  {% include 'calendarapp/staff_members.html' %}
+{% endif %}
+  <br>
 <div class="row">
     <div class="col-md-12">
         <div class="tile row">
