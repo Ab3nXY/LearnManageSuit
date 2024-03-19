@@ -14927,7 +14927,7 @@ be a descendant of the grid when it is being dragged.
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  background-color: blue;
+  background-color:#1a237e;
   z-index: 1030;
   padding-right: 15px;
 }
@@ -14964,7 +14964,7 @@ be a descendant of the grid when it is being dragged.
             flex: 0 0 auto;
     display: block;
     width: 230px;
-    background-color: blue;
+    background-color: #1a237e;
   }
 }
 
@@ -15165,7 +15165,7 @@ be a descendant of the grid when it is being dragged.
   width: 230px;
   overflow: auto;
   z-index: 10;
-  background-color: darkblue
+  background-color: #64b5f6
   ;
   -webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
           box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
@@ -15211,7 +15211,7 @@ be a descendant of the grid when it is being dragged.
           align-items: center;
   padding: 10px;
   margin-bottom: 20px;
-  color: #fff;
+  color: #1a237e;
 }
 
 .app-sidebar__user-avatar {
@@ -15257,14 +15257,14 @@ be a descendant of the grid when it is being dragged.
  background-color 0.3s ease;
   transition: border-left-color 0.3s ease,
  background-color 0.3s ease;
-  color: white;
+  color: #1a237e;
 }
 
 .app-menu__item.active, .app-menu__item:hover, .app-menu__item:focus {
-  background: grey;
-  border-left-color: blue;
+  background: lightgrey;
+  border-left-color: darkblue;
   text-decoration: none;
-  color: #fff;
+  color: #1a237e;
 }
 
 .app-menu__icon {
@@ -15283,7 +15283,7 @@ be a descendant of the grid when it is being dragged.
 
 .treeview.is-expanded [data-toggle='treeview'] {
   border-left-color: blue;
-  background: #0d1214;
+  background: grey;
 }
 
 .treeview.is-expanded .treeview-menu {
@@ -15302,7 +15302,7 @@ be a descendant of the grid when it is being dragged.
   -webkit-transition: max-height 0.3s ease;
   -o-transition: max-height 0.3s ease;
   transition: max-height 0.3s ease;
-  background: #2a383e;
+  background: lightgrey;
 }
 
 .treeview-item {
@@ -15312,15 +15312,15 @@ be a descendant of the grid when it is being dragged.
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  padding: 5px 5px 5px 20px;
+  padding: 5px 5px 5px 60px;
   font-size: 1em;
-  color: #fff;
+  color: #1a237e;
 }
 
 .treeview-item.active, .treeview-item:hover, .treeview-item:focus {
-  background: #0d1214;
+  background: white;
   text-decoration: none;
-  color: #fff;
+  color: #1a237e;
 }
 
 .treeview-item .icon {
@@ -16076,12 +16076,12 @@ be a descendant of the grid when it is being dragged.
 }
 
 .widget-small.primary.coloured-icon {
-  background-color: #fff;
+  background-color: white;
   color: #2a2a2a;
 }
 
 .widget-small.primary.coloured-icon .icon {
-  background-color: blue;
+  background-color: #21f702;
   color: #fff;
 }
 
@@ -16095,7 +16095,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .widget-small.info.coloured-icon .icon {
-  background-color: #17a2b8;
+  background-color: #ffea00;
   color: #fff;
 }
 
@@ -16109,7 +16109,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .widget-small.warning.coloured-icon .icon {
-  background-color: #ffc107;
+  background-color: #ff6600;
   color: #fff;
 }
 
@@ -16123,7 +16123,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .widget-small.danger.coloured-icon .icon {
-  background-color: #dc3545;
+  background-color: #a200ff;
   color: #fff;
 }
 

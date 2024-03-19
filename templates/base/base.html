@@ -17,7 +17,7 @@
     <body class="app sidebar-mini">
         <!-- Navbar-->
         <header class="app-header">
-            <a class="app-header__logo" href="#">College Mastermind</a>
+            <a class="app-header__logo" href="#">Academic Edge</a>
             <!-- Sidebar toggle button-->
             <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
             <!-- Navbar Right Menu-->
@@ -128,8 +128,8 @@
                 <img src="{% if user.image %}{{ user.image.url}}{% else %}{% static 'profile_pics/default.jpg' %}{% endif %}"
                 alt="Profile Picture" style="border-radius: 50%; overflow: hidden; width: 80px; height: 80px;" class="circular-frame" height="80px" width="80px">
                 <div>
-                    <p class="app-sidebar__user-name" style="margin-left: 1em;">College</p>
-                    <p class="app-sidebar__user-designation" style="margin-left: 1em;">Mastermind</p>
+                    <p class="app-sidebar__user-name" style="margin-left: 1em;">{{user.first_name}}</p>
+                    <p class="app-sidebar__user-designation" style="margin-left: 1em;">{{user.last_name}}</p>
                 </div>
             </div>
             <ul class="app-menu">

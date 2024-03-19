@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.mail import send_mail
-from .forms import ExamForm, ExamFormSet
+from .forms import ExamFormSet
 
 def exam_grading(request):
     if request.method == 'POST':

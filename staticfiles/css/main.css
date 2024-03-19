@@ -16081,7 +16081,7 @@ be a descendant of the grid when it is being dragged.
 }
 
 .widget-small.primary.coloured-icon .icon {
-  background-color: blue;
+  background-color: #21f702;
   color: #fff;
 }
 

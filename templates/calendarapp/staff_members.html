@@ -1,5 +1,5 @@
 {% load static %}
-
+<div style="background-color: white; padding: 5px; margin: 10px;">
 {% for staff in staff_members %}
     <a href="#">
         <div class="staff-member-card" style="display: inline-block; margin: 5px; ">
@@ -9,8 +9,9 @@
             <p style="text-align: center;">{{ staff.first_name }}</p>
         </div>
     </a>
-
 {% endfor %}
+</div>
+
 
 <script src="{% static 'js/random_color.js' %}"></script>
 <script>

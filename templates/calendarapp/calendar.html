@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title %}College Mastermind{% endblock title %}
+{% block title %}Academic Edge{% endblock title %}
 
 {% block extracss %}
   <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
@@ -21,7 +21,6 @@
 {% block content %}
 
 {% if user.is_superuser %}  
-  <h4 class="mb-2">Staff Members</h4>
   {% include 'calendarapp/staff_members.html' %}
 {% endif %}
   <br>
