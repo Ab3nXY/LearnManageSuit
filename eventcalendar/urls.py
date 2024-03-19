@@ -27,8 +27,6 @@ urlpatterns = [
     path("", include("calendarapp.urls")),
     path('grades/', include('grades.urls')),
     path('accounts/', include('allauth.urls')),
-    path('verification/', include('verify_email.urls')),	
-    # path('accounts/', include('allauth.account.urls')),
 ]
 
 # Display images

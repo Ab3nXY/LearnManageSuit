@@ -4,7 +4,7 @@
 {% block title %}Profile{% endblock title %}
 
 {% block content %}
-<h1>Update Your Profile</h1>
+<h3 class="mb-3 text-center">Update Your Profile</h3>
 {% if profile_updated %}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <strong>Profile updated successfully!</strong>
@@ -15,16 +15,50 @@
         }, 5000);
     </script>
 {% endif %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ user_form.as_p }}
-
-    <img src="{% if user.image %}{{ user.image.url }}{% else %}{{ MEDIA_URL }}profile_pics/default.jpg{% endif %}"
-         alt="Profile Picture"  style="border: 5px solid green; border-radius: 50%; overflow: hidden; width: 80px; height: 80px;" class="circular-frame" height="80px" width="80px">
-    <br>
-    <br>
-
-    <button type="submit" class="btn btn-primary">Update Profile</button>
-</form>
-
+<div class="card">
+    <div class="card-body">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+  
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="first_name">First Name</label>
+              <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user_form.first_name.value }}">
+            </div>
+            <div class="form-group">
+              <label for="last_name">Last Name</label>
+              <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user_form.last_name.value }}">
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" class="form-control" id="email" name="email" value="{{ user_form.email.value }}">
+            </div>
+          </div>
+  
+          <div class="col-md-6 d-flex align-items-center">  <div class="text-center">
+              <div class="img-upload-container">
+                <div class="img-preview" style="margin: auto;">
+                    <br>
+                  {% if user.image %}
+                    <img src="{{ user.image.url }}" alt="Current Profile Picture" class="img-thumbnail" style="height: 150px; width: 150px;">
+                  {% else %}
+                    <div class="no-img-preview">Upload Profile Picture</div>
+                  {% endif %}
+                </div>
+                <input type="file" class="custom-file-input" id="image" name="image">
+                <label class="custom-file-label text-muted" for="image">Choose file</label>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="row">
+          <div class="col-md-6" style="margin: auto;">  <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
 {% endblock content %}
