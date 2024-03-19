@@ -47,6 +47,11 @@
                                                     <div class="form-group">
                                                         <button type="submit" class="btn btn-primary">Sign In</button>
                                                     </div>
+                                                  
+                                                    <div class="w-100 text-center">
+                                                       <a href="{% url 'account_reset_password' %}">Forgot Password?</a> 
+                                                    </div>
+                                                    
                                                     <div class="social-wrap">
                                                     <p class="or">
                                                         <span>or</span>
@@ -64,7 +69,7 @@
                                             </div>
                                         </form>
                                         <div class="w-100">
-                                            <p class="mt-4">If you don't have account yet <a href="{% url 'accounts:signup' %}">Sign Up</a> here</p>
+                                            <p class="mt-4">If you don't have account yet <a href="{% url 'account_signup' %}">Sign Up</a> here</p>
                                         </div>
                                     </div>
                                 </div>
