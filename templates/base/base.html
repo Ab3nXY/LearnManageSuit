@@ -128,37 +128,45 @@
                 <img src="{% if user.image %}{{ user.image.url}}{% else %}{% static 'profile_pics/default.jpg' %}{% endif %}"
                 alt="Profile Picture" style="border-radius: 50%; overflow: hidden; width: 80px; height: 80px;" class="circular-frame" height="80px" width="80px">
                 <div>
-                    <p class="app-sidebar__user-name" style="margin-left: 1em;">{{user.first_name}}</p>
-                    <p class="app-sidebar__user-designation" style="margin-left: 1em;">{{user.last_name}}</p>
+                    <p class="app-sidebar__user-name" style="padding: 0 10px;">{{user.first_name}}</p>
+                    <p class="app-sidebar__user-designation" style="padding: 0 15px;">{{user.last_name}}</p>
                 </div>
             </div>
+            <hr style="height: auto; margin: auto;">
             <ul class="app-menu">
                 <li>
                     <a class="app-menu__item" href="{% url 'dashboard' %}"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a>
                 </li>
+                <hr style="height: auto; margin: auto;">
                 <li>
                     <a class="app-menu__item" href="{% url 'calendarapp:calendar' %}"><i class="app-menu__icon fa fa-calendar"></i><span class="app-menu__label">Calendar</span></a>
                 </li>
+                <hr style="height: auto; margin: auto;">
                 <li class="treeview">
                     <a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-th-list"></i><span class="app-menu__label">Events</span><i class="treeview-indicator fa fa-angle-right"></i></a>
                     <ul class="treeview-menu">
                         <li>
                             <a class="treeview-item" href="{% url 'calendarapp:running_events' %}"><i class="icon fa fa-circle-o"></i> Running</a>
                         </li>
+                        <hr style="height: auto; margin: auto;">
                         <li>
                             <a class="treeview-item" href="{% url 'calendarapp:running_events' %}"><i class="icon fa fa-circle-o"></i> Upcoming</a>
                         </li>
+                        <hr style="height: auto; margin: auto;">
                         <li>
                             <a class="treeview-item" href="{% url 'calendarapp:all_events' %}"><i class="icon fa fa-circle-o"></i> All</a>
                         </li>
                     </ul>
                 </li>
+                <hr style="height: auto; margin: auto;">
                 <li>
                     <a class="app-menu__item" href="#"><i class="app-menu__icon fa fa-file-code-o"></i><span class="app-menu__label">Docs</span></a>
                 </li>
+                <hr style="height: auto; margin: auto;">
                 <li>
                     <a class="app-menu__item" href="{% url 'exam_grading' %}"></i><span class="app-menu__label">SAT Result</span></a>
                 </li>
+                <hr style="height: auto; margin: auto;">
             </ul>
         </aside>
         <main class="app-content">

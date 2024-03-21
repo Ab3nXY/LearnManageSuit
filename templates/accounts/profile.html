@@ -36,29 +36,28 @@
             </div>
           </div>
   
-          <div class="col-md-6 d-flex align-items-center">  <div class="text-center">
-              <div class="img-upload-container">
-                <div class="img-preview" style="margin: auto;">
-                    <br>
-                  {% if user.image %}
-                    <img src="{{ user.image.url }}" alt="Current Profile Picture" class="img-thumbnail" style="height: 150px; width: 150px;">
-                  {% else %}
-                    <div class="no-img-preview">Upload Profile Picture</div>
-                  {% endif %}
+          <div class="col-md-6 d-flex align-items-center">
+            <div class="text-center flex-grow-1">
+                <div class="img-upload-container">
+                    <div class="img-preview">
+                            <img src="{{ user.image.url }}" alt="Current Profile Picture" class="img-thumbnail cursor-pointer" id="profile-pic-upload" style="height: 200px; width: 200px; border-radius: 50%; margin-right: 20px;border-width: 3px; border-color: blue;">
+                            <label for="image" class="cursor-pointer" id="profile-pic-upload">
+                                <section type="submit" class="btn btn-primary">Change</section>
+                                <input type="file" class="d-none" id="image" name="image">
+                    </div>
                 </div>
-                <input type="file" class="custom-file-input" id="image" name="image">
-                <label class="custom-file-label text-muted" for="image">Choose file</label>
-              </div>
             </div>
-          </div>
+            
+            <input type="file" class="d-none" id="image" name="image">  </div>
         </div>
   
-        <div class="row">
-          <div class="col-md-6" style="margin: auto;">  <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
+        <div class="row" style="margin: auto;">
+          <div class="col-md-6" style="margin: auto;">
+            <button type="submit" class="btn btn-primary btn-block">Update Profile</button>
           </div>
         </div>
       </form>
     </div>
   </div>
-  
+
 {% endblock content %}

@@ -8,7 +8,6 @@ class SignInForm(forms.Form):
     email = forms.EmailField(widget=forms.EmailInput(attrs={"class": "form-control"}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={"class": "form-control"}))
 
-
 class MyCustomSignUpForm(SignupForm):
     first_name = forms.CharField(
         label="First Name",
@@ -49,3 +48,4 @@ class UserProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'email', 'image']
+
