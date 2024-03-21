@@ -24,44 +24,30 @@
   {% include 'calendarapp/staff_members.html' %}
 {% endif %}
   <br>
+  
 <div class="row">
     <div class="col-md-12">
         <div class="tile row">
             <div class="col-md-3">
                 <div id="external-events">
                   <h4>Running Events</h4>
-                  {% if request.user.is_superuser %}
-                    {% for event in all_running_events %}
-                      <div class="fc-event">
-                        <h3>{{ event.title }}</h3>
-                        <p>{{ event.description }}</p>
-                        <p>{{event.id}}</p>
-                        <p>From: {{ event.start_time }}</p>
-                        <p>To: {{ event.end_time }}</p>
-                      </div>
-                    {% empty %}
-                      <p>No Running Events Found</p>
-                    {% endfor %}
-                  {% else %}
-                    {% for event in user_running_events %}
-                      <div class="fc-event">
-                        <h3>{{ event.title }}</h3>
-                        <p>{{ event.description }}</p>
-                        <p>{{event.id}}</p>
-                        <p>From: {{ event.start_time }}</p>
-                        <p>To: {{ event.end_time }}</p>
-                      </div>
-                    {% empty %}
-                      <p>No Running Events Found</p>
-                    {% endfor %}
-                  {% endif %}
+                  {% for event in events_month %}
+                  <div class="fc-event">
+                      <h3>{{ event.title }}</h3>
+                      <p>{{ event.description }}</p>
+                      <p>{{event.id}}</p>
+                      <p>From: {{ event.start_time }}</p>
+                      <p>To: {{ event.end_time }}</p>
+                  </div>
+                {% empty %}
+                  <p>No Running Events Found</p>
+                {% endfor %}
                 </div>
               </div>
-              
             <div class="col-md-9">
                 <div id="calendar"></div>
             </div>
-            {% if user.role == 'admin' or user.role == 'Student' %}
+            {% if user.role == 'admin' or user.role == 'student' %}
             <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">

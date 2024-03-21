@@ -1,27 +1,15 @@
 {% load static %}
 <div style="background-color: white; padding: 5px; margin: 10px;">
 {% for staff in staff_members %}
- {% if staff != user %}
-    <a href="#">
-        <div class="staff-member-card" style="display: inline-block; margin: 5px; ">
-            <img src="{% if staff.image %}{{ staff.image.url }}{% else %}{{ MEDIA_URL }}profile_pics/default.jpg{% endif %}"
-                alt="Profile Picture" id="staff-image-{{ staff.id }}"  style="border: 3px solid; border-radius: 50%; overflow: hidden; width: 60px; height: 60px;" 
-                class="circular-frame" height="60px" width="60px">
-            <p style="text-align: center;">{{ staff.first_name|title}}<br>({{ staff.role|title }})</p>
-
-        </div>
+    <a href="{% url 'calendarapp:calendar_admin' staff.pk %}">
+      <div class="staff-member-card" style="display: inline-block; margin: 5px; ">
+        <img src="{% if staff.image %}{{ staff.image.url }}{% else %}{{ MEDIA_URL }}profile_pics/default.jpg{% endif %}"
+             alt="Profile Picture" id="staff-image-{{ staff.id }}"
+             style="border: 3px solid; border-color: var(--staff-color-{{ staff.id }}); border-radius: 50%; overflow: hidden; width: 60px; height: 60px;"
+             class="circular-frame" height="60px" width="60px">
+        <p style="text-align: center;">{{ staff.first_name|title}}<br>({{ staff.role|title }})</p>
+      </div>
     </a>
-  {% endif %}
 {% endfor %}
 </div>
 
-
-<script src="{% static 'js/random_color.js' %}"></script>
-<script>
-  window.onload = function() {  // Run after the page loads
-    const staffImages = document.querySelectorAll('.staff-member-card img');
-    for (const image of staffImages) {
-      image.style.borderColor = `rgb(${random_color()})`;
-    }
-  }
-</script>

@@ -16,6 +16,7 @@ class EventForm(ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Enter event description",
+                    "rows": 2,
                 }
             ),
             "start_time": DateInput(

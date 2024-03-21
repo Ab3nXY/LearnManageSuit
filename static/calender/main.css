@@ -877,12 +877,16 @@ A HORIZONTAL event
   padding: 2px 0
 
 }
-.fc-daygrid-dot-event .fc-event-title {
+.fc-daygrid-dot-event  {
     flex-grow: 1;
     flex-shrink: 1;
     min-width: 0; /* important for allowing to shrink all the way */
     overflow: hidden;
-    font-weight: bold;
+    font-weight: normal;
+
+  }
+.fc-event-title:first-letter {
+    text-transform: uppercase;
   }
 .fc-daygrid-dot-event:hover,
   .fc-daygrid-dot-event.fc-event-mirror {

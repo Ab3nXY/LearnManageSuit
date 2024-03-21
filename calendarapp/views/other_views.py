@@ -18,6 +18,7 @@ from calendarapp.forms import EventForm, AddMemberForm, SettingsForm
 from django.contrib.auth.models import User
 from accounts.models import User
 from django.views import View
+import random
 
 
 def get_date(req_day):
@@ -45,7 +46,7 @@ def next_month(d):
 class CalendarView(LoginRequiredMixin, generic.ListView):
     login_url = "accounts:signin"
     model = Event
-    template_name = "calendar.html"
+    template_name = "calendars.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -58,7 +59,7 @@ class CalendarView(LoginRequiredMixin, generic.ListView):
         return context
 
 
-@login_required(login_url="signup")
+@login_required
 def create_event(request):
     form = EventForm(request.POST or None)
     if request.POST and form.is_valid():
@@ -83,7 +84,7 @@ class EventEdit(generic.UpdateView):
     template_name = "event.html"
 
 
-@login_required(login_url="signup")
+@login_required
 def event_details(request, event_id):
     event = Event.objects.get(id=event_id)
     eventmember = EventMember.objects.filter(event=event)
@@ -118,11 +119,17 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
     template_name = "calendarapp/calendar.html"
     form_class = EventForm
 
-    def get(self, request, *args, **kwargs):
-        if request.user.role in ['student', 'admin', 'tutor', 'guidance']:
-            forms = self.form_class()
-            events = Event.objects.get_all_events(user=request.user)
-            events_month = Event.objects.get_running_events(user=request.user)
+    def get(self, request, staff_id=None, *args, **kwargs):
+        if request.user.role in ['admin']:
+            # Admin view: Show all events and staff members
+            if staff_id:
+                # Show events for specific staff member (if staff_id provided)
+                events = Event.objects.filter(user_id=staff_id)
+            else:
+                # Show all events for current user
+                events = Event.objects.get_all_events(user=request.user)
+            events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
+
             event_list = []
             for event in events:
                 event_list.append({
@@ -132,10 +139,88 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "description": event.description,
                 })
+
             staff_members = User.objects.filter(is_staff=True).select_related('profile')
-            context = {"form": forms, "events": event_list,
-                       "events_month": events_month, "staff_members": staff_members}
+            universal_colors = [
+                "#000000",  # Black
+                "#FFFFFF",  # White
+                "#FF0000",  # Red
+                "#00FF00",  # Lime
+                "#0000FF",  # Blue
+                "#FFFF00",  # Yellow
+                "#00FFFF",  # Aqua
+                "#FF00FF",  # Fuchsia
+                "#C0C0C0",  # Silver
+                "#808080",  # Gray
+                "#800000",  # Maroon
+                "#008000",  # Green
+                "#000080",  # Navy
+                "#808000",  # Olive
+                "#008080",  # Teal
+                "#800080",  # Purple
+            ]
+            used_colors = set()  # Initialize used_colors within the view function
+
+            unique_colors = []
+            for staff in staff_members:
+                while True:
+                    random_color = random.choice(universal_colors)
+                    if random_color not in used_colors:
+                        used_colors.add(random_color)
+                        unique_colors.append(random_color)
+                        break
+
+            context = {
+                "form": self.form_class(),
+                "events": event_list,
+                "events_month": events_month,
+                "staff_members": staff_members,
+                "unique_colors": unique_colors,  # Pass unique colors to the template
+            }
             return render(request, self.template_name, context)
+
+        else:
+            # Regular user view: Show only their events
+            events = Event.objects.get_all_events(user=request.user)
+            events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
+
+            event_list = []
+            for event in events:
+                event_list.append({
+                    "id": event.id,
+                    "title": event.title,
+                    "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+                    "description": event.description,
+                })
+
+            context = {
+                "form": self.form_class(),
+                "events": event_list,
+                "events_month": events_month,
+            }
+            return render(request, self.template_name, context)
+        
+    def post(self, request, *args, **kwargs):
+        # Handle form submission logic here
+        forms = self.form_class(request.POST)
+        if forms.is_valid():
+            # Process the form data and create the event
+            title = forms.cleaned_data["title"]
+            description = forms.cleaned_data["description"]
+            start_time = forms.cleaned_data["start_time"]
+            end_time = forms.cleaned_data["end_time"]
+            Event.objects.create(
+                user=request.user,
+                title=title,
+                description=description,
+                start_time=start_time,
+                end_time=end_time,
+            )
+            return redirect("calendarapp:calendar")  # Redirect to calendar view
+        else:
+            # Handle form validation errors
+            return render(request, self.template_name, {"form": forms})
 
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
@@ -184,3 +269,33 @@ def students_view(request):
     total_students = User.objects.filter(role='student').count()
     context = {'total_students': total_students}
     return render(request, 'calendarapp/dashboard.html', context)
+
+def generate_unique_color(used_colors=set()):
+    """
+    Generates a random hex color code from a predefined list of universal colors,
+    avoiding previously used colors (if provided).
+    """
+
+    universal_colors = [
+        "#000000",  # Black
+        "#FFFFFF",  # White
+        "#FF0000",  # Red
+        "#00FF00",  # Lime
+        "#0000FF",  # Blue
+        "#FFFF00",  # Yellow
+        "#00FFFF",  # Aqua
+        "#FF00FF",  # Fuchsia
+        "#C0C0C0",  # Silver
+        "#808080",  # Gray
+        "#800000",  # Maroon
+        "#008000",  # Green
+        "#000080",  # Navy
+        "#808000",  # Olive
+        "#008080",  # Teal
+        "#800080",  # Purple
+    ]
+
+    while True:
+        random_color = random.choice(universal_colors)
+        if random_color not in used_colors:
+            return random_color

@@ -33,10 +33,9 @@ DEFAULT_AUTO_FIELD='django.db.models.AutoField'
 
 ALLOWED_HOSTS =  ["*"]
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # Replace with your SMTP server
-EMAIL_PORT = 587  # Replace with your SMTP server port
-EMAIL_USE_TLS = True  # Set to True if your SMTP server requires TLS
-
+EMAIL_HOST = config('EMAIL_HOST', default='')  
+EMAIL_PORT = config('EMAIL_PORT', default='')   
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', default='') 
 EMAIL_HOST_USER = config('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default='')
 
@@ -111,18 +110,18 @@ WSGI_APPLICATION = "eventcalendar.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-#     }
-# }
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    }
+}
 
-
+"""
 DATABASES = {
     "default": dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
-
+"""
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
