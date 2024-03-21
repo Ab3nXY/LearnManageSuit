@@ -1,14 +1,17 @@
 {% load static %}
 <div style="background-color: white; padding: 5px; margin: 10px;">
 {% for staff in staff_members %}
+ {% if staff != user %}
     <a href="#">
         <div class="staff-member-card" style="display: inline-block; margin: 5px; ">
             <img src="{% if staff.image %}{{ staff.image.url }}{% else %}{{ MEDIA_URL }}profile_pics/default.jpg{% endif %}"
                 alt="Profile Picture" id="staff-image-{{ staff.id }}"  style="border: 3px solid; border-radius: 50%; overflow: hidden; width: 60px; height: 60px;" 
                 class="circular-frame" height="60px" width="60px">
-            <p style="text-align: center;">{{ staff.first_name }}</p>
+            <p style="text-align: center;">{{ staff.first_name|title}}<br>({{ staff.role|title }})</p>
+
         </div>
     </a>
+  {% endif %}
 {% endfor %}
 </div>
 

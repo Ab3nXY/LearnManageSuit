@@ -1,7 +1,7 @@
 from django.urls import path
 
 from . import views
-
+from calendarapp.views import SettingsView
 app_name = "calendarapp"
 
 
@@ -28,4 +28,5 @@ urlpatterns = [
         views.RunningEventsListView.as_view(),
         name="running_events",
     ),
+    path('settings/', SettingsView.as_view(), name='settings'),
 ]

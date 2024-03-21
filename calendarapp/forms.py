@@ -40,3 +40,7 @@ class AddMemberForm(forms.ModelForm):
     class Meta:
         model = EventMember
         fields = ["user"]
+
+class SettingsForm(forms.Form):
+    start_time = forms.DateTimeField(label='Start Time')
+    end_time = forms.DateTimeField(label='End Time')

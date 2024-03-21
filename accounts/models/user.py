@@ -35,7 +35,7 @@ class UserManager(BaseUserManager):
         """Creates and returns a new user using an email address"""
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
-        extra_fields.setdefault("role", "student")
+        extra_fields.setdefault("role", "Student")
         return self._create_user(email, password, **extra_fields)
 
     def create_staffuser(self, email, password=None, **extra_fields):
@@ -52,17 +52,17 @@ class UserManager(BaseUserManager):
     
     def create_student(self, email, password=None, **extra_fields):
         """Creates and returns a new student user using an email address"""
-        extra_fields.setdefault("role", "student")
+        extra_fields.setdefault("role", "Student")
         return self._create_user(email, password, **extra_fields)
 
     def create_tutor(self, email, password=None, **extra_fields):
         """Creates and returns a new tutor user using an email address"""
-        extra_fields.setdefault("role", "tutor")
+        extra_fields.setdefault("role", "Tutor")
         return self._create_user(email, password, **extra_fields)
 
     def create_guidance(self, email, password=None, **extra_fields):
         """Creates and returns a new guidance user using an email address"""
-        extra_fields.setdefault("role", "guidance")
+        extra_fields.setdefault("role", "Guidance")
         return self._create_user(email, password, **extra_fields)
 
 
@@ -115,18 +115,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             perm for perm in self.get_group_permissions(obj=obj)
         }
 
-
     objects = UserManager()
 
     USERNAME_FIELD = "email"
-
-    @receiver(post_save, sender=User)
-    def capitalize_names(sender, instance, created, **kwargs):
-        """Signal handler to capitalize first letter of names on save."""
-        instance.first_name = instance.first_name.capitalize()
-        instance.last_name = instance.last_name.capitalize()
-        instance.email = instance.email.capitalize()
-        instance.save()
 
     def __str__(self):
         return self.email

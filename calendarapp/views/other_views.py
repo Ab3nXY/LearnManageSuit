@@ -14,9 +14,11 @@ from django.shortcuts import get_object_or_404
 
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
-from calendarapp.forms import EventForm, AddMemberForm
+from calendarapp.forms import EventForm, AddMemberForm, SettingsForm
 from django.contrib.auth.models import User
 from accounts.models import User
+from django.views import View
+
 
 def get_date(req_day):
     if req_day:
@@ -117,36 +119,23 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
     form_class = EventForm
 
     def get(self, request, *args, **kwargs):
-        forms = self.form_class()
-        events = Event.objects.get_all_events(user=request.user)
-        events_month = Event.objects.get_running_events(user=request.user)
-        event_list = []
-        # start: '2020-09-16T16:00:00'
-        for event in events:
-            event_list.append(
-                {   "id": event.id,
+        if request.user.role in ['student', 'admin', 'tutor', 'guidance']:
+            forms = self.form_class()
+            events = Event.objects.get_all_events(user=request.user)
+            events_month = Event.objects.get_running_events(user=request.user)
+            event_list = []
+            for event in events:
+                event_list.append({
+                    "id": event.id,
                     "title": event.title,
                     "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "description": event.description,
-                }
-            )
-        staff_members = User.objects.filter(is_staff=True).select_related('profile')
-        context = {"form": forms, "events": event_list,
-                   "events_month": events_month, "staff_members": staff_members}
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
-        forms = self.form_class(request.POST)
-        if forms.is_valid():
-            form = forms.save(commit=False)
-            form.user = request.user
-            form.save()
-            return redirect("calendarapp:calendar")
-        context = {"form": forms}
-        return render(request, self.template_name, context)
-
-
+                })
+            staff_members = User.objects.filter(is_staff=True).select_related('profile')
+            context = {"form": forms, "events": event_list,
+                       "events_month": events_month, "staff_members": staff_members}
+            return render(request, self.template_name, context)
 
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
@@ -181,3 +170,17 @@ def next_day(request, event_id):
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
     
+class SettingsView(LoginRequiredMixin, View):
+    login_url = 'accounts:signin'
+    template_name = 'calendarapp/settings.html'  
+
+    def get(self, request, *args, **kwargs):
+        form = SettingsForm()  # Initialize the set availability form
+        # Add any additional logic here, such as fetching initial data for the form
+        context = {'form': form}
+        return render(request, self.template_name, context)
+    
+def students_view(request):
+    total_students = User.objects.filter(role='student').count()
+    context = {'total_students': total_students}
+    return render(request, 'calendarapp/dashboard.html', context)
