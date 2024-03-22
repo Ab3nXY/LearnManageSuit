@@ -16,4 +16,3 @@ def update_profile(request):
             return redirect('accounts:profile')
     context = {'user_form': user_form, 'profile_updated': request.session.pop('profile_updated', False)}
     return render(request, 'accounts/profile.html', context)
-

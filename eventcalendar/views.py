@@ -24,8 +24,10 @@ class DashboardView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         events = Event.objects.get_all_events(user=request.user)
         running_events = Event.objects.get_running_events(user=request.user)
-        latest_events = Event.objects.filter(user=request.user).order_by("-id")[:10]
-
+        if request.user.is_superuser:
+          latest_events = Event.objects.order_by("-id")[:10]
+        else:
+          latest_events = Event.objects.filter(user=request.user).order_by("-id")[:10]
         # Get student and tutor counts
         total_students = get_student_count(user=request.user)
         total_tutors = get_tutor_count(user=request.user)

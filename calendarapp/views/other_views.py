@@ -120,7 +120,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
     form_class = EventForm
 
     def get(self, request, staff_id=None, *args, **kwargs):
-        if request.user.role in ['admin']:
+        if User.is_superuser:
             # Admin view: Show all events and staff members
             if staff_id:
                 # Show events for specific staff member (if staff_id provided)
@@ -140,42 +140,14 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     "description": event.description,
                 })
 
-            staff_members = User.objects.filter(is_staff=True).select_related('profile')
-            universal_colors = [
-                "#000000",  # Black
-                "#FFFFFF",  # White
-                "#FF0000",  # Red
-                "#00FF00",  # Lime
-                "#0000FF",  # Blue
-                "#FFFF00",  # Yellow
-                "#00FFFF",  # Aqua
-                "#FF00FF",  # Fuchsia
-                "#C0C0C0",  # Silver
-                "#808080",  # Gray
-                "#800000",  # Maroon
-                "#008000",  # Green
-                "#000080",  # Navy
-                "#808000",  # Olive
-                "#008080",  # Teal
-                "#800080",  # Purple
-            ]
-            used_colors = set()  # Initialize used_colors within the view function
+            staff_members = User.objects.filter(role__in=["tutor", "guidance"]).select_related('profile')
 
-            unique_colors = []
-            for staff in staff_members:
-                while True:
-                    random_color = random.choice(universal_colors)
-                    if random_color not in used_colors:
-                        used_colors.add(random_color)
-                        unique_colors.append(random_color)
-                        break
-
+            
             context = {
                 "form": self.form_class(),
                 "events": event_list,
                 "events_month": events_month,
                 "staff_members": staff_members,
-                "unique_colors": unique_colors,  # Pass unique colors to the template
             }
             return render(request, self.template_name, context)
 
@@ -265,37 +237,4 @@ class SettingsView(LoginRequiredMixin, View):
         context = {'form': form}
         return render(request, self.template_name, context)
     
-def students_view(request):
-    total_students = User.objects.filter(role='student').count()
-    context = {'total_students': total_students}
-    return render(request, 'calendarapp/dashboard.html', context)
 
-def generate_unique_color(used_colors=set()):
-    """
-    Generates a random hex color code from a predefined list of universal colors,
-    avoiding previously used colors (if provided).
-    """
-
-    universal_colors = [
-        "#000000",  # Black
-        "#FFFFFF",  # White
-        "#FF0000",  # Red
-        "#00FF00",  # Lime
-        "#0000FF",  # Blue
-        "#FFFF00",  # Yellow
-        "#00FFFF",  # Aqua
-        "#FF00FF",  # Fuchsia
-        "#C0C0C0",  # Silver
-        "#808080",  # Gray
-        "#800000",  # Maroon
-        "#008000",  # Green
-        "#000080",  # Navy
-        "#808000",  # Olive
-        "#008080",  # Teal
-        "#800080",  # Purple
-    ]
-
-    while True:
-        random_color = random.choice(universal_colors)
-        if random_color not in used_colors:
-            return random_color

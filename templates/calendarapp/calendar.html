@@ -30,15 +30,13 @@
         <div class="tile row">
             <div class="col-md-3">
                 <div id="external-events">
-                  <h4>Running Events</h4>
-                  {% for event in events_month %}
-                  <div class="fc-event">
-                      <h3>{{ event.title }}</h3>
-                      <p>{{ event.description }}</p>
-                      <p>{{event.id}}</p>
-                      <p>From: {{ event.start_time }}</p>
-                      <p>To: {{ event.end_time }}</p>
-                  </div>
+                  <h4 style="text-align: center; font-size: 25px;">Running Events</h4>
+                  {% for event in events %}
+                    <div class="fc-event" style="background-color: {{event.user.profile.border_color }};">
+                      <h3 style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.title }}</h3>
+                      <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.description }}</p>
+                      <p style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.start_time }}</p>
+                    </div>
                 {% empty %}
                   <p>No Running Events Found</p>
                 {% endfor %}
@@ -47,7 +45,7 @@
             <div class="col-md-9">
                 <div id="calendar"></div>
             </div>
-            {% if user.role == 'admin' or user.role == 'student' %}
+            <!-- {% if user.role == 'admin' or user.role == 'student' %} -->
             <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -85,7 +83,7 @@
                     </div>
                 </div>
             </div>
-            {% endif %}
+            <!-- {% endif %} -->
             <div class="modal fade show" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">

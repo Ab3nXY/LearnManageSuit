@@ -12,9 +12,8 @@ class AllEventsListView(ListView):
         if user.is_superuser:
             # Admins see all events
             return Event.objects.all()  # Retrieve all events for superusers
-        else:
-            # Non-admins see only their own events
-            return Event.objects.get_all_events(user=user)
+         # Non-admins see only their own events
+        return Event.objects.get_all_events(user=user)
 
 class RunningEventsListView(ListView):
     """ Running events list view """
@@ -24,4 +23,8 @@ class RunningEventsListView(ListView):
 
     def get_queryset(self):
         user = self.request.user
+        if user.is_superuser:
+            # Admins see all events
+            return Event.objects.all()
+        # Non-admins see only their own events
         return Event.objects.get_running_events(user=user)

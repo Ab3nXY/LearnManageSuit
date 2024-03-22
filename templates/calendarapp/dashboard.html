@@ -77,9 +77,9 @@
                                         {% for event in latest_events %}
                                             <tr role="row" class="odd">
                                                 <td class="sorting_1">{{ forloop.counter }}</td>
+                                                <td>{{ event.user.first_name }}</td>
                                                 <td>{{ event.title }}</td>
                                                 <td>{{ event.start_time }}</td>
-                                                <td>{{ event.end_time }}</td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>

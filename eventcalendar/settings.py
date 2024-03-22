@@ -49,7 +49,8 @@ ACCOUNT_LOGOUT_REDIRECT_URL = "settings.LOGIN_URL"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_FORMS = {'signup': 'accounts.forms.MyCustomSignUpForm'}
-# Application definition
+
+INTERNAL_IPS = "127.0.0.1"
 
 INSTALLED_APPS = [
 
@@ -60,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "calendarapp.apps.CalendarappConfig",
+    "debug_toolbar",
     "accounts",
     "grades",
     'allauth',
@@ -77,8 +79,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     # Add the account middleware:
     "allauth.account.middleware.AccountMiddleware",
+
 
 ]
 

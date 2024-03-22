@@ -124,6 +124,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # Delete profile when user is deleted
+    border_color = models.CharField(max_length=20, default='#000000')
 
 
     def __str__(self):

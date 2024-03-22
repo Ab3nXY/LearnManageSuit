@@ -44,8 +44,9 @@ class MyCustomSignUpForm(SignupForm):
 
 class UserProfileUpdateForm(forms.ModelForm):
     image = forms.ImageField(required=False, widget=forms.FileInput(attrs={"class": "form-control-file"}))
-
+    border_color = forms.CharField(max_length=20)
+    
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'image']
+        fields = ['first_name', 'last_name', 'email', 'image', 'border_color']
 
