@@ -3,7 +3,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
 from calendarapp.models import Event
+from accounts.models import User
 
+def get_student_count(user):
+  """
+  Retrieves the number of users with the "student" role.
+  """
+  return User.objects.filter(role="student").count()
+
+def get_tutor_count(user):
+  """
+  Retrieves the number of users with the "tutor" role.
+  """
+  return User.objects.filter(role="tutor").count()
 
 class DashboardView(LoginRequiredMixin, View):
     login_url = "accounts:signin"
@@ -13,9 +25,16 @@ class DashboardView(LoginRequiredMixin, View):
         events = Event.objects.get_all_events(user=request.user)
         running_events = Event.objects.get_running_events(user=request.user)
         latest_events = Event.objects.filter(user=request.user).order_by("-id")[:10]
+
+        # Get student and tutor counts
+        total_students = get_student_count(user=request.user)
+        total_tutors = get_tutor_count(user=request.user)
+
         context = {
             "total_event": events.count(),
             "running_events": running_events,
             "latest_events": latest_events,
+            "total_students": total_students,
+            "total_tutors": total_tutors,
         }
         return render(request, self.template_name, context)
