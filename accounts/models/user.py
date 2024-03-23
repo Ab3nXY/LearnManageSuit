@@ -80,7 +80,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True)
     first_name = models.CharField(_("First Name"), max_length=150, blank=True)
     last_name = models.CharField(_("Last Name"), max_length=150, blank=True)
-    image = models.ImageField(default='default.jpg', upload_to='profile_pics')
+    image = models.ImageField(default='profile_pic/default.jpg', upload_to='profile_pics')
 
     # Add a field for user role
     ROLE_CHOICES = (
