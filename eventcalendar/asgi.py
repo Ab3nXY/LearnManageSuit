@@ -1,14 +1,16 @@
+"""
+ASGI config for eventcalendar project.
+
+It exposes the ASGI callable as a module-level variable named ``application``.
+
+For more information on this file, see
+https://docs.djangoproject.com/en/3.0/howto/deployment/asgi/
+"""
+
 import os
+
 from django.core.asgi import get_asgi_application
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-dotenv_path = os.path.join(BASE_DIR, '.env')
-if os.path.exists(dotenv_path):
-    load_dotenv(dotenv_path)
-
-# Set DJANGO_SETTINGS_MODULE to the value specified in .env file
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", os.getenv('DJANGO_SETTINGS_MODULE'))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eventcalendar.settings.production")
 
 application = get_asgi_application()
