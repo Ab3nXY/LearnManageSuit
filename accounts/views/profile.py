@@ -10,16 +10,13 @@ def update_profile(request):
         profile_updated = False
 
     if request.method == 'POST':
-        user_form = UserProfileUpdateForm(request.POST, request.FILES, instance=request.user)
+        user_form = UserProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
         if user_form.is_valid():
-            user = user_form.save(commit=False)  # Don't commit yet
-            if request.FILES.get('image'):
-                user.profile.image = request.FILES['image']  # Update profile image
-            user.save()
-            request.session['profile_updated'] = True  # Set a session variable
+            user_form.save()
+            request.session['profile_updated'] = True
             return redirect('accounts:profile')
     else:
-        user_form = UserProfileUpdateForm(instance=request.user)
+        user_form = UserProfileUpdateForm(instance=request.user.profile)
 
     context = {'user_form': user_form, 'profile_updated': profile_updated}
     return render(request, 'accounts/profile.html', context)
