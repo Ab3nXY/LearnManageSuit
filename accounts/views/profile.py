@@ -4,15 +4,22 @@ from accounts.forms import UserProfileUpdateForm
 
 @login_required
 def update_profile(request):
-    user_form = UserProfileUpdateForm(instance=request.user)  # Create empty form for GET
+    try:
+        profile_updated = request.session['profile_updated']
+    except KeyError:
+        profile_updated = False
+
     if request.method == 'POST':
         user_form = UserProfileUpdateForm(request.POST, request.FILES, instance=request.user)
         if user_form.is_valid():
             user = user_form.save(commit=False)  # Don't commit yet
             if request.FILES.get('image'):
-                user.image = request.FILES['image']
+                user.profile.image = request.FILES['image']  # Update profile image
             user.save()
             request.session['profile_updated'] = True  # Set a session variable
             return redirect('accounts:profile')
-    context = {'user_form': user_form, 'profile_updated': request.session.pop('profile_updated', False)}
+    else:
+        user_form = UserProfileUpdateForm(instance=request.user)
+
+    context = {'user_form': user_form, 'profile_updated': profile_updated}
     return render(request, 'accounts/profile.html', context)

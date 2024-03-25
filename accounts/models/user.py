@@ -80,7 +80,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True)
     first_name = models.CharField(_("First Name"), max_length=150, blank=True)
     last_name = models.CharField(_("Last Name"), max_length=150, blank=True)
-    image = models.ImageField(default='profile_pic/default.jpg', upload_to='profile_pics')
 
     # Add a field for user role
     ROLE_CHOICES = (
@@ -124,6 +123,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE) # Delete profile when user is deleted
+    image = models.ImageField(default = "profile_pics/default.jpg", upload_to='profile_pics')
     border_color = models.CharField(max_length=20, default='#000000')
 
 

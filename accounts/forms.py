@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-from accounts.models import User
+from accounts.models import User, Profile
 from allauth.account.forms import SignupForm
 
 class SignInForm(forms.Form):
@@ -45,8 +45,27 @@ class MyCustomSignUpForm(SignupForm):
 class UserProfileUpdateForm(forms.ModelForm):
     image = forms.ImageField(required=False, widget=forms.FileInput(attrs={"class": "form-control-file"}))
     border_color = forms.CharField(max_length=20)
-    
+
     class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'email', 'image', 'border_color']
+        model = User  # Use the User model
+        fields = ['first_name', 'last_name', 'email']  # Include fields from User model
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # If the instance has a related Profile, populate the form with its data
+        if self.instance.profile:
+            self.fields['image'].initial = self.instance.profile.image
+            self.fields['border_color'].initial = self.instance.profile.border_color
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if not user.profile:
+            user.profile = Profile.objects.create(user=user)
+        user.profile.image = self.cleaned_data['image']
+        user.profile.border_color = self.cleaned_data['border_color']
+        if commit:
+            user.save()
+            user.profile.save()
+        return user
+
 

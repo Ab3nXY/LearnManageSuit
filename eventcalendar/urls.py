@@ -25,7 +25,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("", include("calendarapp.urls")),
-    path('grades/', include('grades.urls')),
     path('accounts/', include('allauth.urls')),
     path("__debug__/", include("debug_toolbar.urls")),
 ]
