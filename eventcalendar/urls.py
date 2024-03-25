@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include, ifdebug
+from django.urls import path, include
 from .views import DashboardView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -10,8 +10,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("", include("calendarapp.urls")),
     path('accounts/', include('allauth.urls')),
-    ifdebug():
-        path("__debug__/", include("debug_toolbar.urls")),
+    # path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 # Serve static and media files
