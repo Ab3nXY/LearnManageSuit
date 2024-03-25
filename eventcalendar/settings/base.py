@@ -26,8 +26,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', default='default_secret_key')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
 ALLOWED_HOSTS =  ["*"]
@@ -106,17 +104,6 @@ WSGI_APPLICATION = "eventcalendar.wsgi.application"
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
-#database for development environment
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 
 AUTHENTICATION_BACKENDS = [
