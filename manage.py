@@ -2,21 +2,10 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-from decouple import config
-from dotenv import load_dotenv
 
-load_dotenv()
 
 def main():
-    # Load environment variables from .env file
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    dotenv_path = os.path.join(BASE_DIR, '.env')
-    if os.path.exists(dotenv_path):
-        load_dotenv(dotenv_path)
-
-    # Set DJANGO_SETTINGS_MODULE to the value specified in .env file
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", config('DJANGO_SETTINGS_MODULE'))
-
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "eventcalendar.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -27,5 +16,7 @@ def main():
         ) from exc
     execute_from_command_line(sys.argv)
 
+
 if __name__ == "__main__":
     main()
+    
