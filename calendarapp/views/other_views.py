@@ -18,7 +18,7 @@ from calendarapp.forms import EventForm, AddMemberForm, SettingsForm
 from django.contrib.auth.models import User
 from accounts.models import User
 from django.views import View
-import random
+from django.shortcuts import get_object_or_404
 
 
 def get_date(req_day):
@@ -84,12 +84,15 @@ class EventEdit(generic.UpdateView):
     template_name = "event.html"
 
 
+
+
 @login_required
 def event_details(request, event_id):
-    event = Event.objects.get(id=event_id)
+    event = get_object_or_404(Event, id=event_id)
     eventmember = EventMember.objects.filter(event=event)
     context = {"event": event, "eventmember": eventmember}
     return render(request, "event-details.html", context)
+
 
 
 def add_eventmember(request, event_id):
@@ -144,6 +147,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
 
             
             context = {
+                "id": event.id,
                 "form": self.form_class(),
                 "events": event_list,
                 "events_month": events_month,

@@ -33,15 +33,19 @@
                   <h4 style="text-align: center; font-size: 25px;">Running Events</h4>
                   {% for event in events %}
                     <div class="fc-event" style="background-color: {{user.profile.border_color }};">
+            <a href="{% url 'calendarapp:event_edit' id %}" style="color: white; text-decoration: none;">
                       <h3 style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.title }}</h3>
                       <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.description }}</p>
                       <p style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.start_time }}</p>
+            </a>
                     </div>
                 {% empty %}
                   <p>No Running Events Found</p>
                 {% endfor %}
                 </div>
               </div>
+
+
             <div class="col-md-9">
                 <div id="calendar"></div>
             </div>
@@ -50,7 +54,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
-                            <h5 class="modal-title text-white" id="exampleModalLongTitle">Add New Event</h5>
+                            <h5 class="modal-title text-white" id="exampleModalLongTitle" style="text-align: center;">Book a Session</h5>
                             <button id="modalClose1" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -59,12 +63,8 @@
                             {% csrf_token %}
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Event Title:</label>
+                                    <label for="recipient-name" class="col-form-label">Session Title:</label>
                                     {{ form.title }}
-                                </div>
-                                <div class="form-group">
-                                    <label for="message-text" class="col-form-label">Description:</label>
-                                    {{ form.description }}
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">Start Date:</label>
@@ -99,17 +99,15 @@
                               
                               <div class="form-group">
                                   <label for="message-text" class="col-form-label">Description:</label>
-                                  <p id = "description_event_detail">
-
-                                  </p>
+                                  <p id = "description_event_detail"></p>
                               </div>
                               <div class="form-group">
                                   <label for="message-text" class="col-form-label">Start:</label>
-                                  <p id = "start_event_detail">
+                                  <p id = "start_event_detail"></p>
                               </div>
                               <div class="form-group">
                                   <label for="message-text" class="col-form-label">End:</label>
-                                  <p id = "end_event_detail">
+                                  <p id = "end_event_detail"></p>
                               </div>
                           </div>
                           <div class="modal-footer">
@@ -131,17 +129,17 @@
 {% block extrascripts %}
 <script src="{% static 'calender/main.js' %}"></script>
 <script>
-  function converterDataParaDjangoFormat(data) {
-      const dataJS = new Date(data);
-      const ano = dataJS.getFullYear();
-      const mes = (dataJS.getMonth() + 1).toString().padStart(2, '0');
-      const dia = dataJS.getDate().toString().padStart(2, '0');
-      const hora = dataJS.getHours().toString().padStart(2, '0');
-      const minuto = dataJS.getMinutes().toString().padStart(2, '0');
-      const segundo = dataJS.getSeconds().toString().padStart(2, '0');
-      const formatoDjango = `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
-      return formatoDjango;
-  }
+function convertDateToDjangoFormat(date) {
+    const dataJS  = new Date(date);
+    const year = dataJS .getFullYear();
+    const month = (dataJS .getMonth() + 1).toString().padStart(2, '0');
+    const day = dataJS .getDate().toString().padStart(2, '0');
+    const hour = dataJS .getHours().toString().padStart(2, '0');
+    const minute = dataJS .getMinutes().toString().padStart(2, '0');
+    const second = dataJS .getSeconds().toString().padStart(2, '0');
+    const djangoFormat = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    return djangoFormat;
+}
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
       var today = new Date();
@@ -203,8 +201,6 @@
           modalStart.textContent = start;
           modalEnd.textContent = end;
           modalDescripition.textContent = description;
-          
-         
           modal.style.display = 'block';
         },
         editable: true,

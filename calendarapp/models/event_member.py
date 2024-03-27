@@ -1,8 +1,7 @@
 from django.db import models
-
-from accounts.models import User
+from accounts.models import User  
+from django.core.exceptions import ValidationError
 from calendarapp.models import Event, EventAbstract
-
 
 class EventMember(EventAbstract):
     """ Event member model """
@@ -17,3 +16,9 @@ class EventMember(EventAbstract):
 
     def __str__(self):
         return str(self.user)
+
+    def clean(self):
+        # Check if user is staff
+        if not self.user.is_staff:
+            raise ValidationError('Event member must be a staff user.')
+        super().clean()  # Call parent clean method
