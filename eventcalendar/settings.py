@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='default_secret_key')
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
-ALLOWED_HOSTS = ['127.0.01', 'learnmanagesuit.onrender.com']
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='')  
 EMAIL_PORT = config('EMAIL_PORT', default='')   
@@ -138,6 +138,8 @@ MEDIA_URL = '/media/'
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 if DEBUG:
+
+    ALLOWED_HOSTS = ['*']
     # Debug toolbar configuration
     INSTALLED_APPS += ['debug_toolbar']
     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
@@ -155,6 +157,8 @@ if DEBUG:
         }
     }
 else:
+
+    ALLOWED_HOSTS = ['learnmanagesuit.onrender.com']
     # Production-specific settings
     DATABASES = {
         'default': dj_database_url.config(
