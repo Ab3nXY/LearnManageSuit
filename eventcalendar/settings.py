@@ -1,6 +1,7 @@
 import os
 from decouple import config
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -156,12 +157,9 @@ if DEBUG:
 else:
     # Production-specific settings
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME_PROD'),
-            'USER': config('DB_USER_PROD'),
-            'PASSWORD': config('DB_PASSWORD_PROD'),
-            'HOST': config('DB_HOST_PROD'),
-            'PORT': '5432',
-        }
+        'default': dj_database_url.config(
+            default=config('PG_EX_URL'),
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
