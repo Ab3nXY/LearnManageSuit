@@ -158,7 +158,7 @@ if DEBUG:
     }
 else:
 
-    ALLOWED_HOSTS = 'learnmanagesuit.onrender.com'
+    ALLOWED_HOSTS = ['learnmanagesuit.onrender.com']
     # Production-specific settings
     DATABASES = {
         'default': dj_database_url.config(
