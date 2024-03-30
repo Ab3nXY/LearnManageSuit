@@ -131,17 +131,18 @@
 {% block extrascripts %}
 <script src="{% static 'calender/main.js' %}"></script>
 <script>
-  function converterDataParaDjangoFormat(data) {
-      const dataJS = new Date(data);
-      const ano = dataJS.getFullYear();
-      const mes = (dataJS.getMonth() + 1).toString().padStart(2, '0');
-      const dia = dataJS.getDate().toString().padStart(2, '0');
-      const hora = dataJS.getHours().toString().padStart(2, '0');
-      const minuto = dataJS.getMinutes().toString().padStart(2, '0');
-      const segundo = dataJS.getSeconds().toString().padStart(2, '0');
-      const formatoDjango = `${ano}-${mes}-${dia} ${hora}:${minuto}:${segundo}`;
-      return formatoDjango;
-  }
+function convertDateToDjangoFormat(date) {
+    const jsDate = new Date(date);
+    const year = jsDate.getFullYear();
+    const month = (jsDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = jsDate.getDate().toString().padStart(2, '0');
+    const hour = jsDate.getHours().toString().padStart(2, '0');
+    const minute = jsDate.getMinutes().toString().padStart(2, '0');
+    const second = jsDate.getSeconds().toString().padStart(2, '0');
+    const djangoFormat = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    return djangoFormat;
+}
+
     document.addEventListener('DOMContentLoaded', function() {
       var calendarEl = document.getElementById('calendar');
       var today = new Date();
@@ -252,7 +253,7 @@
     });
     function formatDateTime(dateTime) {
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
-      const dataFormatada = new Date(dateTime).toLocaleDateString('pt-BR', options);
+      const dataFormatada = new Date(dateTime).toLocaleDateString('en-US', options);
       return dataFormatada;
     };
     document.getElementById('delete-event-button').addEventListener('click', function() {
