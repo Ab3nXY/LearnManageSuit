@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 from accounts.models import User
 from django.views import View
 from django.shortcuts import get_object_or_404
-
+from django import forms
 
 def get_date(req_day):
     if req_day:

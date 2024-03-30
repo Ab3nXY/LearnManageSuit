@@ -102,8 +102,6 @@
                               <div class="form-group">
                                   <label for="message-text" class="col-form-label">Description:</label>
                                   <p id = "description_event_detail">
-
-                                  </p>
                               </div>
                               <div class="form-group">
                                   <label for="message-text" class="col-form-label">Start:</label>
@@ -140,8 +138,7 @@ function convertDateToDjangoFormat(date) {
     const day = jsDate.getDate().toString().padStart(2, '0');
     const hour = jsDate.getHours().toString().padStart(2, '0');
     const minute = jsDate.getMinutes().toString().padStart(2, '0');
-    const second = jsDate.getSeconds().toString().padStart(2, '0');
-    const djangoFormat = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+    const djangoFormat = `${year}-${month}-${day} ${hour}:${minute}`;
     return djangoFormat;
 }
 
@@ -160,13 +157,10 @@ function convertDateToDjangoFormat(date) {
         selectable: true,
         selectMirror: true,
         select: function(arg) {
-          console.log('clicked')
-          console.log(arg.start)
-          console.log(arg.end)
           var modal = document.getElementById('eventModal')
           modal.style.display = 'block'
-          document.getElementById('id_start_time').value = converterDataParaDjangoFormat(arg.start);
-          document.getElementById('id_end_time').value = converterDataParaDjangoFormat(arg.end);
+          document.getElementById('id_start_time').value = convertDateToDjangoFormat(arg.start);
+          document.getElementById('id_end_time').value = convertDateToDjangoFormat(arg.start);
           calendar.unselect()
         },
         
@@ -179,7 +173,6 @@ function convertDateToDjangoFormat(date) {
         // events: 'bn.bd#holiday@group.v.calendar.google.com',
         eventClick: function(arg) {
           
-          console.log('clicked')
           var title = arg.event.title;
           var start = formatDateTime(arg.event.start) ;
           var end = formatDateTime(arg.event.end);
@@ -254,7 +247,7 @@ function convertDateToDjangoFormat(date) {
       eventModal.style.display = 'none';
     });
     function formatDateTime(dateTime) {
-      const options = {year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',  timeZoneName: 'short' };
+      const options = {year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit',  timeZoneName: 'short' };
       const dataFormatada = new Date(dateTime).toLocaleDateString('en-US', options);
       return dataFormatada;
     };
