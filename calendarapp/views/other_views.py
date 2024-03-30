@@ -82,7 +82,16 @@ class EventEdit(generic.UpdateView):
     model = Event
     fields = ["title", "description", "start_time", "end_time"]
     template_name = "event.html"
+    success_url = reverse_lazy("calendarapp:calendar")  # Redirect to the event list page after successful update
 
+    def get_object(self, queryset=None):
+        # Get the event object based on the URL parameter
+        return Event.objects.get(pk=self.kwargs['pk'])
+
+    def form_valid(self, form):
+        # Save the form with the updated data
+        form.save()
+        return super().form_valid(form)
 
 
 
@@ -123,59 +132,64 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
     form_class = EventForm
 
     def get(self, request, staff_id=None, *args, **kwargs):
-        if User.is_superuser:
-            # Admin view: Show all events and staff members
-            if staff_id:
-                # Show events for specific staff member (if staff_id provided)
-                events = Event.objects.filter(user_id=staff_id)
+            if User.is_superuser:
+                # Admin view: Show all events and staff members
+                if staff_id:
+                    # Show events for specific staff member (if staff_id provided)
+                    events = Event.objects.filter(user_id=staff_id).select_related('user__profile')
+                else:
+                    # Show all events for current user
+                    events = Event.objects.get_all_events(user=request.user).select_related('user__profile')
+                events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
+
+                event_list = []
+                for event in events:
+                    event_list.append({
+                        "id": event.id,
+                        "title": event.title,
+                        "start": event.start_time.strftime("%Y-%m-%dT%H:%M"),
+                        "end": event.end_time.strftime("%Y-%m-%dT%H:%M"),
+                        "description": event.description,
+                        "creator_border_color": event.user.profile.border_color,  # New field
+                    })
+
+                staff_members = User.objects.filter(role__in=["tutor", "guidance"]).select_related('profile')
+
+                
+                context = {
+                    # "id": event.id,
+                    "form": self.form_class(),
+                    "events": event_list,
+                    "events_month": events_month,
+                    "staff_members": staff_members,
+                }
+                return render(request, self.template_name, context)
+
             else:
-                # Show all events for current user
-                events = Event.objects.get_all_events(user=request.user)
-            events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
+                # Regular user view: Show only their events
+                events = Event.objects.get_all_events(user=request.user).select_related('user__profile')
+                events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
 
-            event_list = []
-            for event in events:
-                event_list.append({
-                    "id": event.id,
-                    "title": event.title,
-                    "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "description": event.description,
-                })
+                event_list = []
+                for event in events:
+                    event_list.append({
+                        "id": event.id,
+                        "title": event.title,
+                        "start": event.start_time.strftime("%Y-%m-%dT%H:%M"),
+                        "end": event.end_time.strftime("%Y-%m-%dT%H:%M"),
+                        "description": event.description,
+                        "creator_border_color": event.user.profile.border_color,  # New field
 
-            staff_members = User.objects.filter(role__in=["tutor", "guidance"]).select_related('profile')
+                    })
 
-            
-            context = {
-                "id": event.id,
-                "form": self.form_class(),
-                "events": event_list,
-                "events_month": events_month,
-                "staff_members": staff_members,
-            }
-            return render(request, self.template_name, context)
+                context = {
+                    "form": self.form_class(),
+                    "events": event_list,
+                    "events_month": events_month,
+                }
+                return render(request, self.template_name, context) 
 
-        else:
-            # Regular user view: Show only their events
-            events = Event.objects.get_all_events(user=request.user)
-            events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
 
-            event_list = []
-            for event in events:
-                event_list.append({
-                    "id": event.id,
-                    "title": event.title,
-                    "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "description": event.description,
-                })
-
-            context = {
-                "form": self.form_class(),
-                "events": event_list,
-                "events_month": events_month,
-            }
-            return render(request, self.template_name, context)
         
     def post(self, request, *args, **kwargs):
         # Handle form submission logic here

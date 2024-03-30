@@ -30,23 +30,26 @@
         <div class="tile row">
             <div class="col-md-3">
                 <div id="external-events">
-                  <h4 style="text-align: center; font-size: 25px;">Running Events</h4>
+                  <h4 style="text-align: center; font-size: 23px;">Running Events</h4>
                   {% for event in events %}
-                    <div class="fc-event" style="background-color: {{user.profile.border_color }};">
+                <a href="{% url 'calendarapp:event_edit' event.id %}" style="color: white; cursor: pointer; text-decoration: none;">    
+                    <div class="fc-event" style="background-color: {{ event.creator_border_color }};">
                       <h3 style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.title }}</h3>
                       <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.description }}</p>
                       <p style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.start_time }}</p>
+                </a>       
                     </div>
                 {% empty %}
                   <p>No Running Events Found</p>
                 {% endfor %}
+                
                 </div>
               </div>
+
             <div class="col-md-9">
                 <div id="calendar"></div>
             </div>
-            <!-- {% if user.role == 'admin' or user.role == 'student' %} -->
-            <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="True">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
@@ -83,7 +86,6 @@
                     </div>
                 </div>
             </div>
-            <!-- {% endif %} -->
             <div class="modal fade show" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered" role="document">
                   <div class="modal-content">
@@ -114,8 +116,8 @@
                           </div>
                           <div class="modal-footer">
                               <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Delete</button>
-                              <button id="add-to-next-week" data-event-id-week="" type="button" class="btn btn-success">Next Week</button>
-                              <button id="add-to-next-day" data-event-id-day="" type="button" class="btn btn-primary">Next Day</button>
+                              <!-- <button id="add-to-next-week" data-event-id-week="" type="button" class="btn btn-success">Next Week</button>
+                              <button id="add-to-next-day" data-event-id-day="" type="button" class="btn btn-primary">Next Day</button> -->
 
                           </div>
                       </form>
@@ -192,12 +194,12 @@ function convertDateToDjangoFormat(date) {
           var modalEnd = document.getElementById('end_event_detail'); 
           var modalDescripition = document.getElementById('description_event_detail'); 
           var deleteButton = document.getElementById("delete-event-button");
-          var nextWeek = document.getElementById("add-to-next-week");
-          var nextDay = document.getElementById("add-to-next-day");
+        //   var nextWeek = document.getElementById("add-to-next-week");
+        //   var nextDay = document.getElementById("add-to-next-day");
 
           deleteButton.setAttribute("data-event-id", id);
-          nextWeek.setAttribute("data-event-id-week", id);
-          nextDay.setAttribute("data-event-id-day", id);
+        //   nextWeek.setAttribute("data-event-id-week", id);
+        //   nextDay.setAttribute("data-event-id-day", id);
           modal.style.display = 'block' 
           
           modalTitle.textContent = title;
@@ -252,70 +254,84 @@ function convertDateToDjangoFormat(date) {
       eventModal.style.display = 'none';
     });
     function formatDateTime(dateTime) {
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', timeZoneName: 'short' };
+      const options = {year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',  timeZoneName: 'short' };
       const dataFormatada = new Date(dateTime).toLocaleDateString('en-US', options);
       return dataFormatada;
     };
     document.getElementById('delete-event-button').addEventListener('click', function() {
-      const eventId = this.getAttribute('data-event-id');
-      if (confirm('Are you sure you want to delete this event?')) {
-          $.ajax({
-              url: `/delete_event/${eventId}/`,
-              type: 'POST',
-              data: {
-                  csrfmiddlewaretoken: '{{ csrf_token }}',
-              },
-              success: function(response) {
-                  alert(response.message);
-                  window.location.reload();
-              },
-              error: function(xhr, status, error) {
-                  alert('Error!');
-              }
-          
-          });
-      }});
-      
-      document.getElementById('add-to-next-week').addEventListener('click', function() {
-          const eventId = this.getAttribute('data-event-id-week');
-          if (confirm('Are you sure you want add this event to next week?')) {
-              $.ajax({
-                url: `/next_week/${eventId}/`,
-                  type: 'POST',
-                  data: {
-                      csrfmiddlewaretoken: '{{ csrf_token }}',
-                  },
-                  success: function(response) {
-                      alert(response.message);
-                      window.location.reload();
-                  },
-                  error: function(xhr, status, error) {
-                      alert('Error!');
-                  }
-              });
-          }
-  });
+  const eventId = this.getAttribute('data-event-id');
+  if (confirm('Are you sure you want to delete this event?')) {
+    $.ajax({
+      url: `/delete_event/${eventId}/`,
+      type: 'POST',
+      data: {
+        csrfmiddlewaretoken: '{{ csrf_token }}',
+      },
+      success: function(response) {
+        window.location.reload();
 
-  document.getElementById('add-to-next-day').addEventListener('click', function() {
-    const eventId = this.getAttribute('data-event-id-day');
-    if (confirm('Are you sure you want add this event to next day?')) {
-        $.ajax({
-          url: `/next_day/${eventId}/`,
-            type: 'POST',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-            },
-            success: function(response) {
-                alert(response.message);
-                window.location.reload();
-            },
-            error: function(xhr, status, error) {
-                alert('Error!');
-            }
-        });
-    }
+        // Remove event from calendar data
+        const eventIndex = calendar.getEventById(eventId); // Assuming `calendar` has `getEventById`
+        if (eventIndex !== null) {
+          calendar.events.splice(eventIndex, 1);
+        }
+
+        // Render updated calendar
+        calendar.render();
+
+        // Close the detail modal after successful deletion
+        const detailModal = document.getElementById('detailModal');
+        detailModal.style.display = 'none';
+      },
+      error: function(xhr, status, error) {
+        alert('Error!');
+      }
+    });
+  }
 });
 
-</script>
+      
+//       document.getElementById('add-to-next-week').addEventListener('click', function() {
+//           const eventId = this.getAttribute('data-event-id-week');
+//           if (confirm('Are you sure you want add this event to next week?')) {
+//               $.ajax({
+//                 url: `/next_week/${eventId}/`,
+//                   type: 'POST',
+//                   data: {
+//                       csrfmiddlewaretoken: '{{ csrf_token }}',
+//                   },
+//                   success: function(response) {
+//                       alert(response.message);
+//                       window.location.reload();
+//                   },
+//                   error: function(xhr, status, error) {
+//                       alert('Error!');
+//                   }
+//               });
+//           }
+//   });
+
+//   document.getElementById('add-to-next-day').addEventListener('click', function() {
+//     const eventId = this.getAttribute('data-event-id-day');
+//     if (confirm('Are you sure you want add this event to next day?')) {
+//         $.ajax({
+//           url: `/next_day/${eventId}/`,
+//             type: 'POST',
+//             data: {
+//                 csrfmiddlewaretoken: '{{ csrf_token }}',
+//             },
+//             success: function(response) {
+//                 alert(response.message);
+//                 window.location.reload();
+//             },
+//             error: function(xhr, status, error) {
+//                 alert('Error!');
+//             }
+//         });
+//     }
+// });
+
+// Edit element popup
+    </script>
 {% endblock extrascripts %}
 

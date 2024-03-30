@@ -21,7 +21,7 @@ class EventManager(models.Manager):
             end_time__gte=datetime.now().date(),
         ).order_by("start_time")
         return running_events
-
+    
 
 class Event(EventAbstract):
     """ Event model """
