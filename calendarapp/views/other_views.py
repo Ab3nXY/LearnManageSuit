@@ -132,64 +132,33 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
     form_class = EventForm
 
     def get(self, request, staff_id=None, *args, **kwargs):
-            if User.is_superuser:
-                # Admin view: Show all events and staff members
-                if staff_id:
-                    # Show events for specific staff member (if staff_id provided)
-                    events = Event.objects.filter(user_id=staff_id).select_related('user__profile')
-                else:
-                    # Show all events for current user
-                    events = Event.objects.get_all_events(user=request.user).select_related('user__profile')
-                events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
-
-                event_list = []
-                for event in events:
-                    event_list.append({
-                        "id": event.id,
-                        "title": event.title,
-                        "start": event.start_time.strftime("%b %d, %Y at %H:%M"),
-                        "end": event.end_time.strftime("%b %d, %Y at %H:%M"),
-                        "description": event.description,
-                        "creator_border_color": event.user.profile.border_color,  # New field
-                    })
-
-                staff_members = User.objects.filter(role__in=["tutor", "guidance"]).select_related('profile')
-
-                
-                context = {
-                    # "id": event.id,
-                    "form": self.form_class(),
-                    "events": event_list,
-                    "events_month": events_month,
-                    "staff_members": staff_members,
-                }
-                return render(request, self.template_name, context)
-
+            if request.user.is_superuser:
+                events = Event.objects.filter(user_id=staff_id) if staff_id else Event.objects.get_all_events(user=request.user)
             else:
-                # Regular user view: Show only their events
-                events = Event.objects.get_all_events(user=request.user).select_related('user__profile')
-                events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
+                events = Event.objects.get_all_events(user=request.user)
 
-                event_list = []
-                for event in events:
-                    event_list.append({
-                        "id": event.id,
-                        "title": event.title,
-                        "start": event.start_time.strftime("%b %d, %Y at %H:%M"),
-                        "end": event.end_time.strftime("%b %d, %Y at %H:%M"),
-                        "description": event.description,
-                        "creator_border_color": event.user.profile.border_color,  # New field
+            events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
 
-                    })
+            event_list = []
+            for event in events.select_related('user__profile'):
+                event_list.append({
+                    "id": event.id,
+                    "title": event.title,
+                    "start": event.start_time.strftime("%Y-%m-%dT%H:%M"),
+                    "end": event.end_time.strftime("%Y-%m-%dT%H:%M"),
+                    "description": event.description,
+                    "creator_border_color": event.user.profile.border_color,  # New field
+                })
 
-                context = {
-                    "form": self.form_class(),
-                    "events": event_list,
-                    "events_month": events_month,
-                }
-                return render(request, self.template_name, context) 
+            staff_members = User.objects.filter(role__in=["tutor", "guidance"]).select_related('profile')
 
-
+            context = {
+                "form": self.form_class(),
+                "events": event_list,
+                "events_month": events_month,
+                "staff_members": staff_members if request.user.is_superuser else None,
+            }
+            return render(request, self.template_name, context)
         
     def post(self, request, *args, **kwargs):
         # Handle form submission logic here
