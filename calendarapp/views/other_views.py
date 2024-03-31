@@ -147,8 +147,8 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     event_list.append({
                         "id": event.id,
                         "title": event.title,
-                        "start": event.start_time.strftime("%Y-%m-%dT%H:%M"),
-                        "end": event.end_time.strftime("%Y-%m-%dT%H:%M"),
+                        "start": event.start_time.strftime("%b %d, %Y at %H:%M"),
+                        "end": event.end_time.strftime("%b %d, %Y at %H:%M"),
                         "description": event.description,
                         "creator_border_color": event.user.profile.border_color,  # New field
                     })
@@ -175,8 +175,8 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     event_list.append({
                         "id": event.id,
                         "title": event.title,
-                        "start": event.start_time.strftime("%Y-%m-%dT%H:%M"),
-                        "end": event.end_time.strftime("%Y-%m-%dT%H:%M"),
+                        "start": event.start_time.strftime("%b %d, %Y at %H:%M"),
+                        "end": event.end_time.strftime("%b %d, %Y at %H:%M"),
                         "description": event.description,
                         "creator_border_color": event.user.profile.border_color,  # New field
 

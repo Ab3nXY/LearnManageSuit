@@ -33,10 +33,10 @@
                   <h4 style="text-align: center; font-size: 23px;">Running Events</h4>
                   {% for event in events %}
                 <a href="{% url 'calendarapp:event_edit' event.id %}" style="color: white; cursor: pointer; text-decoration: none;">    
-                    <div class="fc-event" style="background-color: {{ event.creator_border_color }};">
+                    <div class="fc-event" style="background-color: {{ event.creator_border_color }}; border-color: transparent;">
                       <h3 style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.title }}</h3>
-                      <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.description }}</p>
-                      <p style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.start_time }}</p>
+                      <!-- <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.description }}</p> -->
+                      <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.start }}</p>
                 </a>       
                     </div>
                 {% empty %}

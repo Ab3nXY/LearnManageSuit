@@ -1,14 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import (
-    AbstractBaseUser,
-    BaseUserManager,
-    PermissionsMixin,
-)
+from django.contrib.auth.models import AbstractBaseUser,BaseUserManager,PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from guardian.shortcuts import get_perms_for_model
@@ -18,7 +11,7 @@ from guardian.shortcuts import get_perms_for_model
 class UserManager(BaseUserManager):
     """ User manager """
 
-    def _create_user(self, email, password=None, **extra_fields):
+    def _create_user(self, email, password=None, is_active=False, **extra_fields):
         """Creates and returns a new user using an email address"""
         if not email:  # check for an empty email
             raise AttributeError("User must set an email address")
@@ -33,7 +26,18 @@ class UserManager(BaseUserManager):
 
     def create_user(self, email, password=None, **extra_fields):
         """Creates and returns a new user using an email address"""
+        """Creates and returns a new user using an email address"""
+        if not email:
+            raise AttributeError("User must set an email address")
+        else:
+            email = self.normalize_email(email)
+
+        # Check if email already exists
+        if self.model.objects.filter(email=email).exists():
+            raise ValueError("A user with that email address already exists.")
+        
         extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_active", False)
         extra_fields.setdefault("is_superuser", False)
         extra_fields.setdefault("role", "Student")
         return self._create_user(email, password, **extra_fields)
@@ -75,7 +79,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
     )
     is_staff = models.BooleanField(_("Staff status"), default=False)
-    is_active = models.BooleanField(_("Active"), default=True)
+    is_active = models.BooleanField(_("Active"), default=False)
     date_joined = models.DateTimeField(_("Date Joined"), auto_now_add=True)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True)
     first_name = models.CharField(_("First Name"), max_length=150, blank=True)
@@ -129,3 +133,4 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.first_name} Profile' #show how we want it to be displayed
+    
