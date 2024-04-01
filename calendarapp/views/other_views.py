@@ -19,7 +19,7 @@ from django.contrib.auth.models import User
 from accounts.models import User
 from django.views import View
 from django.shortcuts import get_object_or_404
-from django import forms
+from django.db.models import Q
 
 def get_date(req_day):
     if req_day:
@@ -164,15 +164,33 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
 
     def get(self, request, staff_id=None, *args, **kwargs):
             if request.user.is_superuser:
-                events = Event.objects.filter(user_id=staff_id) if staff_id else Event.objects.get_all_events(user=request.user)
+                if staff_id:
+                    user = get_object_or_404(User, pk=staff_id)
+                    event_ids = EventMember.objects.filter(user=user).values_list('event_id', flat=True)
+                    events = Event.objects.filter(id__in=event_ids)
+                else:
+                    events = Event.objects.get_all_events(user=request.user)
             else:
                 events = Event.objects.get_all_events(user=request.user)
 
-            events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
+            events_month = Event.objects.filter(user=request.user)  # Assuming this filters events for the current month
             
 
             event_list = []
-            for event in events.select_related('user__profile'):
+            for event in events:
+                event_list.append({
+                    "id": event.id,
+                    "title": event.title,
+                    "start": event.start_time.strftime("%Y-%m-%dT%H:%M"),
+                    "end": event.end_time.strftime("%Y-%m-%dT%H:%M"),
+                    "description": event.description,
+                    "creator_border_color": event.user.profile.border_color  # New field
+                })
+
+            # Fetch events where the user is a member
+            user_event_ids = EventMember.objects.filter(user=request.user).values_list('event_id', flat=True)
+            user_events = Event.objects.filter(id__in=user_event_ids)
+            for event in user_events:
                 event_list.append({
                     "id": event.id,
                     "title": event.title,
@@ -182,7 +200,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     "creator_border_color": event.user.profile.border_color,  # New field
                 })
 
-            staff_members = User.objects.filter(role__in=["tutor", "guidance"]).select_related('profile')
+            staff_members = User.objects.filter(role__in=["tutor", "guidance"])
             add_member_form = self.add_member_form_class()  # Pre-populate event field
 
             context = {

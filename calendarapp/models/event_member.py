@@ -16,6 +16,10 @@ class EventMember(EventAbstract):
 
     def __str__(self):
         return str(self.user)
+    
+    @property
+    def border_color(self):
+        return self.user.profile.border_color
 
     def clean(self):
         # Check if user is staff
