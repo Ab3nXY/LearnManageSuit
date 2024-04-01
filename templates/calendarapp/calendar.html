@@ -32,12 +32,13 @@
                 <div id="external-events">
                   <h4 style="text-align: center; font-size: 23px;">Running Events</h4>
                   {% for event in events %}
-                <a href="{% url 'calendarapp:event_edit' event.id %}" style="color: white; cursor: pointer; text-decoration: none;">    
                     <div class="fc-event" style="background-color: {{ event.creator_border_color }}; border-color: transparent;">
-                      <h3 style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.title }}</h3>
-                      <!-- <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.description }}</p> -->
-                      <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.start }}</p>
-                </a>       
+                      <a href="{% url 'calendarapp:event_edit' event.id %}" style="color: white; cursor: pointer; text-decoration: none;"> 
+                        <!-- <a href="#" style="color: white; cursor: pointer; text-decoration: none;" data-event-id="{{ event.id }}">     -->
+                          <h3 style="text-align: center; font-size: medium; margin: 0%; padding: 0%;">{{ event.title }}</h3>
+                          <!-- <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.description }}</p> -->
+                          <p style="text-align: center; margin: 0%; padding: 0%;">{{ event.start }}</p>
+                        </a>       
                     </div>
                 {% empty %}
                   <p>No Running Events Found</p>
@@ -77,6 +78,10 @@
                                     <label for="message-text" class="col-form-label">End Date:</label>
                                     {{ form.end_time }}
                                 </div>
+                                <div class="form-group">
+                                  <input type="hidden" name="event_id" value="{{ event.id }}">
+                                  <div id="member_add_form">  {{ add_member_form }} </div>
+                              </div>
                             </div>
                             <div class="modal-footer">
                                 <button id="modalClose2" type="button" class="btn btn-danger">Close</button>
@@ -125,6 +130,7 @@
         </div>
     </div>
 </div>
+<!-- Event edit form -->
 {% endblock content %}
 
 
@@ -231,6 +237,36 @@ function convertDateToDjangoFormat(date) {
 
       calendar.render();
     });
+// event edit start
+      //   // Select all event anchor tags within the calendar
+      // const eventLinks = document.querySelectorAll('.fc-event a');
+
+      // // Add click event listener to each event link
+      // eventLinks.forEach(link => {
+      //   link.addEventListener('click', function(event) {
+      //     event.preventDefault(); // Prevent default anchor tag behavior
+
+      //     const eventId = event.target.dataset.eventId;
+
+      //     // Fetch event details using eventId (replace with your API call)
+      //     fetch(`/event/edit/${eventId}`) // Replace with your API endpoint
+      //       .then(response => response.json())
+      //       .then(eventData => {
+      //         // Populate form fields with event data
+      //         document.getElementById('id_title').value = eventData.title;
+      //         document.getElementById('id_description').value = eventData.description;
+      //         // ... (update other form fields as needed)
+
+      //         // Open the event modal
+      //         const eventModal = document.getElementById('eventModal');
+      //         eventModal.style.display = 'block';
+      //       })
+      //       .catch(error => console.error(error));
+      //   });
+      // });
+
+// event edit end
+
     const closeBtn1 = document.getElementById('modalClose1');
     const closeBtn2 = document.getElementById('modalClose2');
     const closeBtn3 = document.getElementById('modalDetailClose');
@@ -325,6 +361,23 @@ function convertDateToDjangoFormat(date) {
 // });
 
 // Edit element popup
-    </script>
-{% endblock extrascripts %}
+// function openEventEditPopup(eventId) {
+//   // Prevent default anchor tag behavior (following the "#" href)
+//   event.preventDefault();
 
+//   // Construct the edit URL using the provided event ID
+//   const editUrl = "{% url 'calendarapp:event_edit' 0 %}".replace('0', eventId);
+
+//   // Fetch the event edit form using the constructed URL
+//   fetch(editUrl)
+//     .then(response => response.text())  // Parse the response as text
+//     .then(data => {
+//       // Process the fetched data (HTML content of the edit form)
+//       // You can use the data to populate a modal dialog or similar element
+//       console.log(data); // For debugging purposes, replace with your actual processing logic
+//     })
+//     .catch(error => console.error(error)); // Handle any errors during the fetch request
+// }
+</script>
+
+{% endblock extrascripts %}

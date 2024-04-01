@@ -40,14 +40,14 @@ class AddMemberForm(forms.ModelForm):
         model = EventMember
         fields = ["user"]
 
-    def clean(self):
-        cleaned_data = super().clean()
-        event = self.instance.event  # Access the associated event instance
-        if event:
-            # Check if the user is already a member of this event
-            if EventMember.objects.filter(event=event, user=cleaned_data['user']).exists():
-                raise ValidationError('This user is already a member of this event.')
-        return cleaned_data
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     event = self.instance.event  # Access the associated event instance
+    #     if event:
+    #         # Check if the user is already a member of this event
+    #         if EventMember.objects.filter(event=event, user=cleaned_data['user']).exists():
+    #             raise ValidationError('This user is already a member of this event.')
+    #     return cleaned_data
 
 
 class SettingsForm(forms.Form):

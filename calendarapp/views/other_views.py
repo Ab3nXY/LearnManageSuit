@@ -61,39 +61,64 @@ class CalendarView(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def create_event(request):
-    form = EventForm(request.POST or None)
-    if request.POST and form.is_valid():
-        title = form.cleaned_data["title"]
-        description = form.cleaned_data["description"]
-        start_time = form.cleaned_data["start_time"]
-        end_time = form.cleaned_data["end_time"]
-        Event.objects.get_or_create(
+    event_form = EventForm(request.POST or None)
+
+    if request.POST and event_form.is_valid() and add_member_form.is_valid():
+        title = event_form.cleaned_data["title"]
+        description = event_form.cleaned_data["description"]
+        start_time = event_form.cleaned_data["start_time"]
+        end_time = event_form.cleaned_data["end_time"]
+
+        # Create event
+        event, created = Event.objects.get_or_create(
             user=request.user,
             title=title,
             description=description,
             start_time=start_time,
             end_time=end_time,
         )
+
         return HttpResponseRedirect(reverse("calendarapp:calendar"))
-    return render(request, "event.html", {"form": form})
+
+    return render(request, "event.html", {"event_form": event_form, "add_member_form": add_member_form})
 
 
 class EventEdit(generic.UpdateView):
-    model = Event
-    fields = ["title", "description", "start_time", "end_time"]
+    form_class = EventForm
     template_name = "event.html"
     success_url = reverse_lazy("calendarapp:calendar")  # Redirect to the event list page after successful update
+    add_member_form_class = AddMemberForm  # New attribute for member addition form
 
     def get_object(self, queryset=None):
         # Get the event object based on the URL parameter
         return Event.objects.get(pk=self.kwargs['pk'])
 
-    def form_valid(self, form):
-        # Save the form with the updated data
-        form.save()
-        return super().form_valid(form)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        event = Event.objects.get(pk=self.kwargs.get('pk'))
+        add_member_form = self.add_member_form_class()  # Pre-populate event field
+        context['add_member_form'] = add_member_form
+        return context
 
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        event_form = self.form_class(request.POST, instance=self.object)
+        add_member_form = self.add_member_form_class(request.POST)
 
+        if event_form.is_valid():
+            event = event_form.save()
+
+            # Handle member addition logic (if submitted)
+            if add_member_form.is_valid():
+                user = add_member_form.cleaned_data["user"]
+                # Check if user is already a member
+                if EventMember.objects.filter(event=event, user=user).exists():
+                    # Add error message to the member form
+                    add_member_form.add_error(None, "User is already a member of this event.")
+                else:
+                    EventMember.objects.create(event=event, user=user)
+
+        return super().post(request, *args, **kwargs)        # Save the form with the updated data
 
 @login_required
 def event_details(request, event_id):
@@ -105,20 +130,25 @@ def event_details(request, event_id):
 
 
 def add_eventmember(request, event_id):
-    forms = AddMemberForm()
+
+    add_member_form = AddMemberForm()
+    event = Event.objects.get(id=event_id)
+    event_members = EventMember.objects.filter(event=event)
+
     if request.method == "POST":
-        forms = AddMemberForm(request.POST)
-        if forms.is_valid():
+        add_member_form = AddMemberForm(request.POST)
+        if add_member_form.is_valid():
             member = EventMember.objects.filter(event=event_id)
-            event = Event.objects.get(id=event_id)
             if member.count() <= 9:
-                user = forms.cleaned_data["user"]
+                user = add_member_form.cleaned_data["user"]
                 EventMember.objects.create(event=event, user=user)
                 return redirect("calendarapp:calendar")
             else:
                 print("--------------User limit exceed!-----------------")
-    context = {"form": forms}
+
+    context = {"add_member_form": add_member_form, "event_id": event_id, "event_members": event_members}
     return render(request, "add_member.html", context)
+    
 
 
 class EventMemberDeleteView(generic.DeleteView):
@@ -130,6 +160,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
     login_url = "accounts:signin"
     template_name = "calendarapp/calendar.html"
     form_class = EventForm
+    add_member_form_class = AddMemberForm  # New attribute for member addition form
 
     def get(self, request, staff_id=None, *args, **kwargs):
             if request.user.is_superuser:
@@ -138,6 +169,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                 events = Event.objects.get_all_events(user=request.user)
 
             events_month = Event.objects.get_running_events(user=request.user)  # Assuming this filters events for the current month
+            
 
             event_list = []
             for event in events.select_related('user__profile'):
@@ -151,35 +183,48 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                 })
 
             staff_members = User.objects.filter(role__in=["tutor", "guidance"]).select_related('profile')
+            add_member_form = self.add_member_form_class()  # Pre-populate event field
 
             context = {
                 "form": self.form_class(),
                 "events": event_list,
                 "events_month": events_month,
                 "staff_members": staff_members if request.user.is_superuser else None,
+                'add_member_form':add_member_form
             }
             return render(request, self.template_name, context)
         
     def post(self, request, *args, **kwargs):
         # Handle form submission logic here
         forms = self.form_class(request.POST)
+        add_member_form = self.add_member_form_class(request.POST)
+
         if forms.is_valid():
             # Process the form data and create the event
             title = forms.cleaned_data["title"]
             description = forms.cleaned_data["description"]
             start_time = forms.cleaned_data["start_time"]
             end_time = forms.cleaned_data["end_time"]
-            Event.objects.create(
+            event = Event.objects.create(
                 user=request.user,
                 title=title,
                 description=description,
                 start_time=start_time,
                 end_time=end_time,
-            )
+            ) 
+            # Handle member addition logic (if submitted)
+            if add_member_form.is_valid():
+                user = add_member_form.cleaned_data["user"]
+                # Check if user is already a member
+                if EventMember.objects.filter(event=event, user=user).exists():
+                    # Add error message to the member form
+                    add_member_form.add_error(None, "User is already a member of this event.")
+                else:
+                    EventMember.objects.create(event=event, user=user)
             return redirect("calendarapp:calendar")  # Redirect to calendar view
         else:
             # Handle form validation errors
-            return render(request, self.template_name, {"form": forms})
+            return render(request, self.template_name, {"form": forms, 'add_member_form': add_member_form})
 
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)

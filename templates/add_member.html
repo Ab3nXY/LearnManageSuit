@@ -12,7 +12,8 @@ Add EventMember
 <form method="post">
   {% csrf_token %}
   <table class="form form-table">
-    {{ form }}
+    <input type="hidden" name="event_id" value="{{ event_id}}">
+    {{ add_member_form }}
     <tr><td colspan="2"><button type="submit" class="btn btn-info right"> Submit </button></td></tr>
   </table>
 </form>

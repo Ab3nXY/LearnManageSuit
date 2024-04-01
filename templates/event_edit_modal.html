@@ -7,7 +7,7 @@ Event
 {% block content %}
   <div class="modal-dialog-left">
       <div class="modal-content" style="padding: 20px;">
-              <form method="post" >
+              <form id="updateForm" method="post" >
                 {% csrf_token %}
                 <table class="form form-table">
                   <div class="form-group">
@@ -26,17 +26,6 @@ Event
                     <label for="message-text" class="col-form-label" style="font-weight: bold;">End Date:</label>
                     <div style="height: fit-content;">{{ form.end_time }}</div>
                 </div>
-                <div class="form-group">
-                  <input type="hidden" name="event_id" value="{{ event_id}}">
-                  {{ add_member_form }}
-                  {% if add_member_form.errors %}
-                  <ul class="errorlist">
-                    {% for error in add_member_form.errors %}
-                      <li>{{ error }}</li>
-                    {% endfor %}
-                  </ul>
-                  {% endif %}
-              </div>
                   <tr><td colspan="2"><button type="submit" class="btn btn-primary"> Update </button></td></tr>
                 </table>
               </form>

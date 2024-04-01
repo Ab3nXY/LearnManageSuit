@@ -28,6 +28,9 @@ class DashboardView(LoginRequiredMixin, View):
           latest_events = Event.objects.order_by("-id")[:10]
         else:
           latest_events = Event.objects.filter(user=request.user).order_by("-id")[:10]
+
+        for event in latest_events:
+            members = event.events.all()
         # Get student and tutor counts
         total_students = get_student_count(user=request.user)
         total_tutors = get_tutor_count(user=request.user)

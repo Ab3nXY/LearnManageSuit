@@ -72,6 +72,7 @@
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 200x;">Event Name</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 150px;">Start Time</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 150px;">End Time</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 150px;">Event Member</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -82,6 +83,11 @@
                                                 <td>{{ event.title }}</td>
                                                 <td>{{ event.start_time }}</td>
                                                 <td>{{ event.end_time }}</td>
+                                                <td>
+                                                    {% for member in event.events.all %}
+                                                      {{ member.user.first_name }}{% if not forloop.last %}, {% endif %}
+                                                    {% endfor %}
+                                                </td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
