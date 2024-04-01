@@ -1,6 +1,7 @@
 from django.forms import ModelForm, formset_factory, DateInput, ValidationError
 from calendarapp.models import Event, EventMember
 from django import forms
+from django.forms.widgets import TextInput
 
 class EventForm(ModelForm):
     class Meta:
@@ -39,16 +40,7 @@ class AddMemberForm(forms.ModelForm):
     class Meta:
         model = EventMember
         fields = ["user"]
-
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     event = self.instance.event  # Access the associated event instance
-    #     if event:
-    #         # Check if the user is already a member of this event
-    #         if EventMember.objects.filter(event=event, user=cleaned_data['user']).exists():
-    #             raise ValidationError('This user is already a member of this event.')
-    #     return cleaned_data
-
+        labels = {'user': 'Tutor'}
 
 class SettingsForm(forms.Form):
     start_time = forms.DateTimeField(label='Start Time')
