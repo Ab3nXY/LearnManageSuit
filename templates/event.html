@@ -27,15 +27,17 @@ Event
                     <div style="height: fit-content;">{{ form.end_time }}</div>
                 </div>
                 <div class="form-group">
-                  <input type="hidden" name="event_id" value="{{ event_id}}">
-                  {{ add_member_form }}
-                  {% if add_member_form.errors %}
-                  <ul class="errorlist">
-                    {% for error in add_member_form.errors %}
-                      <li>{{ error }}</li>
-                    {% endfor %}
-                  </ul>
-                  {% endif %}
+                  {% for form in add_member_form %}
+                  <div class="form-group">
+                      <select name="user" id="member-selection" class="form-control">
+                          <option value="">-- Select Tutor --</option>
+                          {% for user in tutors_and_guidance %}
+                          <option value="{{ user.pk }}">{{ user.first_name }}</option>
+                          {% endfor %}
+                      </select>
+                      {{ form.errors }}
+                  </div>
+                  {% endfor %}
               </div>
                   <tr><td colspan="2"><button type="submit" class="btn btn-primary"> Update </button></td></tr>
                 </table>

@@ -1,6 +1,5 @@
 from django.db import models
 from accounts.models import User  
-from django.core.exceptions import ValidationError
 from calendarapp.models import Event, EventAbstract
 
 class EventMember(EventAbstract):
@@ -20,9 +19,3 @@ class EventMember(EventAbstract):
     @property
     def border_color(self):
         return self.user.profile.border_color
-
-    def clean(self):
-        # Check if user is staff
-        if not self.user.is_staff:
-            raise ValidationError('Event member must be a staff user.')
-        super().clean()  # Call parent clean method

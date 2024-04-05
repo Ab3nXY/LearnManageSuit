@@ -79,8 +79,17 @@
                                     {{ form.end_time }}
                                 </div>
                                 <div class="form-group">
-                                  <input type="hidden" name="event_id" value="{{ event.id }}">
-                                  <div id="member_add_form">  {{ add_member_form }} </div>
+                                  {% for form in add_member_form %}
+                                  <div class="form-group">
+                                      <select name="user" id="member-selection" class="form-control">
+                                          <option value="">-- Select Tutor --</option>
+                                          {% for user in tutors_and_guidance %}
+                                          <option value="{{ user.pk }}">{{ user.first_name }}</option>
+                                          {% endfor %}
+                                      </select>
+                                      {{ form.errors }}
+                                  </div>
+                                  {% endfor %}
                               </div>
                             </div>
                             <div class="modal-footer">

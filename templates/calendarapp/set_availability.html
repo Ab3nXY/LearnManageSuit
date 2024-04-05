@@ -1,0 +1,181 @@
+{% extends 'base/base.html' %}
+
+{% block title %} Set Availability {% endblock title %}
+
+{% block extracss %}
+<style>
+  /* Modern design styles */
+  .availability-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    max-width: 700px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  .availability-title {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+  }
+  .day-list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .day-item {
+    margin: 5px;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f5f5f5; /* Light background for days */
+  }
+  .day-item.active {
+    background-color: #ddd; /* Highlight active day */
+  }
+  .time-bar-container {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .time-bar {
+    position: relative;
+    width: 60vw; /* Adjust width */
+    max-width: 700px; /* Add maximum width if needed */
+    height: 20px;
+    background-color: #ddd;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  .time-bar .selected-range {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background-color: lightblue;
+    border-radius: 5px;
+  }
+  .time-bar .handle {
+    position: absolute;
+    top: 50%;
+    width: 5px;
+    height: 20px;
+    background-color: lightblue;
+    cursor: pointer;
+    z-index: 1;
+  }
+  .time-bar .handle.left {
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
+  .time-bar .handle.right {
+    right: 0;
+    transform: translate(50%, -50%);
+  }
+
+
+</style>
+{% endblock extracss %}
+
+{% block content %}
+<div class="availability-container">
+  <form method="post">
+    {% csrf_token %}
+    <div class="time-bar-container">
+      {% for day in days %}
+      <div class="time-bar-wrapper" id="{{ day }}">
+        <div class="time-bar-label " style="text-align: center; font-weight: bold; padding: 4px;">{{ day }}</div>
+        <div class="time-bar">
+          <div class="time-label start-label" style="left: 100px;"></div>
+          <div class="time-label end-label" style="right: 100px;"></div>
+          <div class="selected-range" style="left: 0; right: 0;"></div>
+          <span class="handle left"></span>
+          <span class="handle right"></span>
+        </div>
+        <span class="selected-time"></span>  
+      </div>
+      {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Set Availability</button>
+  </form>
+  {% if user_availability %}
+  <h2>Previous Availability</h2>
+  <p>Available Days: {{ user_availability.available_days }}</p>
+  <p>Start Time: {{ user_availability.start_time }}</p>
+  <p>End Time: {{ user_availability.end_time }}</p>
+  {% endif %}
+</div>
+{% endblock content %}
+
+{% block extrascripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const timeBars = document.querySelectorAll(".time-bar");
+  const totalHours = 24; // Total hours in a day
+
+  timeBars.forEach(function(timeBar) {
+    const selectedRange = timeBar.querySelector(".selected-range");
+    const leftHandle = timeBar.querySelector(".handle.left");
+    const rightHandle = timeBar.querySelector(".handle.right");
+    const startLabel = timeBar.querySelector(".time-label.start-label");
+    const endLabel = timeBar.querySelector(".time-label.end-label");
+
+    let isDraggingLeft = false;
+    let isDraggingRight = false;
+
+    function handleLeftDrag(event) {
+      event.preventDefault();
+      const rect = timeBar.getBoundingClientRect();
+      const width = rect.width;
+      const clickX = event.clientX - rect.left;
+      let hour = Math.floor((clickX / width) * totalHours);
+
+      hour = Math.max(0, Math.min(hour, totalHours)); // Ensure hour is within range
+
+      selectedRange.style.left = `${(hour / totalHours) * 100}%`;
+      leftHandle.style.left = `${(hour / totalHours) * 100}%`;
+      startLabel.style.left = `${((hour / totalHours) * 100) - 20}px`;
+      leftHandle.innerHTML = `${hour < 10 ? '0' + hour : hour}:00`;
+    }
+
+    function handleRightDrag(event) {
+      event.preventDefault();
+      const rect = timeBar.getBoundingClientRect();
+      const width = rect.width;
+      const clickX = event.clientX - rect.left;
+      let hour = Math.ceil((clickX / width) * totalHours);
+
+      hour = Math.max(0, Math.min(hour, totalHours)); // Ensure hour is within range
+
+      selectedRange.style.right = `${100 - ((hour / totalHours) * 100)}%`;
+      rightHandle.style.right = `${100 - ((hour / totalHours) * 100)}%`;
+      endLabel.style.right = `${100 - ((hour / totalHours) * 100) - 20}px`;
+      rightHandle.innerHTML = `${hour < 10 ? '0' + hour : hour}:00`;
+    }
+
+    leftHandle.addEventListener("mousedown", function(event) {
+      isDraggingLeft = true;
+      document.addEventListener("mousemove", handleLeftDrag);
+    });
+
+    rightHandle.addEventListener("mousedown", function(event) {
+      isDraggingRight = true;
+      document.addEventListener("mousemove", handleRightDrag);
+    });
+
+    document.addEventListener("mouseup", function(event) {
+      if (isDraggingLeft) {
+        isDraggingLeft = false;
+        document.removeEventListener("mousemove", handleLeftDrag);
+      }
+      if (isDraggingRight) {
+        isDraggingRight = false;
+        document.removeEventListener("mousemove", handleRightDrag);
+      }
+    });
+  });
+});
+</script>
+{% endblock extrascripts %}

@@ -8,66 +8,43 @@ from guardian.shortcuts import get_perms_for_model
 
 
 
+from django.contrib.auth.base_user import BaseUserManager
+from django.utils.translation import gettext_lazy as _
+
+
 class UserManager(BaseUserManager):
-    """ User manager """
-
-    def _create_user(self, email, password=None, is_active=False, **extra_fields):
-        """Creates and returns a new user using an email address"""
-        if not email:  # check for an empty email
-            raise AttributeError("User must set an email address")
-        else:  # normalizes the provided email
-            email = self.normalize_email(email)
-
-        # create user
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)  # hashes/encrypts password
-        user.save(using=self._db)  # safe for multiple databases
-        return user
+    """
+    Custom user manager that creates and manages users with email as the
+    username field.
+    """
 
     def create_user(self, email, password=None, **extra_fields):
-        """Creates and returns a new user using an email address"""
-        """Creates and returns a new user using an email address"""
+        """
+        Creates and saves a User with the given email, password and extra fields.
+        """
         if not email:
-            raise AttributeError("User must set an email address")
-        else:
-            email = self.normalize_email(email)
+            raise ValueError("Users must have an email address")
 
-        # Check if email already exists
-        if self.model.objects.filter(email=email).exists():
-            raise ValueError("A user with that email address already exists.")
-        
-        extra_fields.setdefault("is_staff", False)
-        extra_fields.setdefault("is_active", False)
-        extra_fields.setdefault("is_superuser", False)
-        extra_fields.setdefault("role", "Student")
-        return self._create_user(email, password, **extra_fields)
-
-    def create_staffuser(self, email, password=None, **extra_fields):
-        """Creates and returns a new staffuser using an email address"""
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", False)
-        return self._create_user(email, password, **extra_fields)
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 
     def create_superuser(self, email, password=None, **extra_fields):
-        """Creates and returns a new superuser using an email address"""
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        return self._create_user(email, password, **extra_fields)
-    
-    def create_student(self, email, password=None, **extra_fields):
-        """Creates and returns a new student user using an email address"""
-        extra_fields.setdefault("role", "Student")
-        return self._create_user(email, password, **extra_fields)
+        """
+        Creates and saves a SuperUser with the given email, password and extra fields.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
 
-    def create_tutor(self, email, password=None, **extra_fields):
-        """Creates and returns a new tutor user using an email address"""
-        extra_fields.setdefault("role", "Tutor")
-        return self._create_user(email, password, **extra_fields)
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
 
-    def create_guidance(self, email, password=None, **extra_fields):
-        """Creates and returns a new guidance user using an email address"""
-        extra_fields.setdefault("role", "Guidance")
-        return self._create_user(email, password, **extra_fields)
+        return self.create_user(email, password, **extra_fields)
+
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -84,6 +61,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True)
     first_name = models.CharField(_("First Name"), max_length=150, blank=True)
     last_name = models.CharField(_("Last Name"), max_length=150, blank=True)
+    available_days = models.CharField(_("Available Days"), max_length=100, blank=True)
+    start_time = models.TimeField(_("Start Time"), blank=True, null=True)
+    end_time = models.TimeField(_("End Time"), blank=True, null=True)
 
     # Add a field for user role
     ROLE_CHOICES = (
