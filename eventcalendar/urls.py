@@ -10,7 +10,7 @@ urlpatterns = [
     path("accounts/", include("accounts.urls")),
     path("", include("calendarapp.urls")),
     path('accounts/', include('allauth.urls')),
-    path("__debug__/", include("debug_toolbar.urls")),
+    # path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 # Serve static and media files

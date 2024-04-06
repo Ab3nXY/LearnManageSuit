@@ -1,6 +1,7 @@
 import os
 from decouple import config
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
 
@@ -52,6 +53,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    #for render deployment
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -123,9 +126,9 @@ USE_TZ = False
 
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "staticfiles"),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "staticfiles"),
+# ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
@@ -155,12 +158,10 @@ if DEBUG:
 else:
     # Production-specific settings
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME_PROD'),
-            'USER': config('DB_USER_PROD'),
-            'PASSWORD': config('DB_PASSWORD_PROD'),
-            'HOST': config('DB_HOST_PROD'),
-            'PORT': '5432',
+        'default': dj_database_url.config(        # Replace this value with your local database's connection string.        
+            default = config('PG_EX_URL'),        
+            conn_max_age=600    
+            )
         }
-    }
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
