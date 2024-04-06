@@ -13792,11 +13792,11 @@ temporary rendered events).
   display: block;
   /* make the <a> tag block */
   font-size: 14px;
-  padding: 5px;
+  padding: 3px;
   line-height: 1.3;
   border-radius: 3px;
-  border: 1px solid blue;
   background-color: #a7d6fd;
+  border: None;
   font-weight: normal;
   /* undo jqui's ui-widget-header bold */
   margin-bottom: 5px;

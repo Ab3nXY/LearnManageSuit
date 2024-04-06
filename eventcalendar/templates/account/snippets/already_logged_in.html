@@ -1,9 +1,0 @@
-{% load i18n %}
-{% load account %}
-{% load allauth %}
-{% user_display user as user_display %}
-{% element alert %}
-    {% slot message %}
-    <p class="mt-4 text-center"><strong>{% blocktranslate %}Note{% endblocktranslate %}:</strong> {% blocktranslate %}You are already logged in as {{ user_display }}.{% endblocktranslate %}</p>
-    {% endslot %}
-{% endelement %}

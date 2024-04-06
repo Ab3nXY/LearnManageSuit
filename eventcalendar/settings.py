@@ -137,7 +137,7 @@ MEDIA_URL = '/media/'
 
 # # Development-specific settings
 # DEBUG = config('DEBUG', default=True, cast=bool)
-DEBUG = config('DEBUG')
+DEBUG = True
 # if DEBUG:
 #     # Debug toolbar configuration
 #     INSTALLED_APPS += ['debug_toolbar']
