@@ -43,3 +43,17 @@ class AvailabilityForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['available_days', 'start_time', 'end_time']
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.is_staff:
+            # If the user is not staff, exclude the availability fields
+            self.fields.pop('available_days')
+            self.fields.pop('start_time')
+            self.fields.pop('end_time')
+        else:
+            # Provide default values for availability fields
+            self.fields['available_days'].initial = ''  # Provide default value for available_days
+            self.fields['start_time'].initial = None  # Provide default value for start_time
+            self.fields['end_time'].initial = None    # Provide default value for end_time

@@ -83,6 +83,8 @@
 <div class="availability-container">
   <form method="post">
     {% csrf_token %}
+    <!-- Check if the user is staff before rendering availability fields -->
+    {% if user.is_staff %}
     <div class="time-bar-container">
       {% for day in days %}
       <div class="time-bar-wrapper" id="{{ day }}">
@@ -98,6 +100,7 @@
       </div>
       {% endfor %}
     </div>
+    {% endif %}
     <button type="submit" class="btn btn-primary">Set Availability</button>
   </form>
   {% if user_availability %}

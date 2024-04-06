@@ -61,9 +61,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True)
     first_name = models.CharField(_("First Name"), max_length=150, blank=True)
     last_name = models.CharField(_("Last Name"), max_length=150, blank=True)
-    available_days = models.CharField(_("Available Days"), max_length=100, blank=True)
+    available_days = models.CharField(_("Available Days"), max_length=100, default='', blank=True)
     start_time = models.TimeField(_("Start Time"), blank=True, null=True)
     end_time = models.TimeField(_("End Time"), blank=True, null=True)
+
 
     # Add a field for user role
     ROLE_CHOICES = (
