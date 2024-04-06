@@ -126,42 +126,42 @@ USE_TZ = False
 
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "staticfiles"),
-# ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "staticfiles"),
+]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# Development-specific settings
-DEBUG = config('DEBUG', default=True, cast=bool)
+# # Development-specific settings
+# DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG')
+# if DEBUG:
+#     # Debug toolbar configuration
+#     INSTALLED_APPS += ['debug_toolbar']
+#     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+#     INTERNAL_IPS = ['127.0.0.1']
 
-if DEBUG:
-    # Debug toolbar configuration
-    INSTALLED_APPS += ['debug_toolbar']
-    MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
-    INTERNAL_IPS = ['127.0.0.1']
-
-    # Database for development environment
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': config('DB_NAME'),
-            'USER': config('DB_USER'),
-            'PASSWORD': config('DB_PASSWORD'),
-            'HOST': 'localhost',
-            'PORT': '5432',
-        }
-    }
-else:
+#     # Database for development environment
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.postgresql',
+#             'NAME': config('DB_NAME'),
+#             'USER': config('DB_USER'),
+#             'PASSWORD': config('DB_PASSWORD'),
+#             'HOST': 'localhost',
+#             'PORT': '5432',
+#         }
+#     }
+# else:
     # Production-specific settings
-    DATABASES = {
+DATABASES = {
         'default': dj_database_url.config(        # Replace this value with your local database's connection string.        
             default = config('PG_EX_URL'),        
             conn_max_age=600    
             )
         }
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
