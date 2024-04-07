@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='default_secret_key')
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
-ALLOWED_HOSTS = ["learnmanagesuit.onrender.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "learnmanagesuit.onrender.com"]
 yesEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='')  
 EMAIL_PORT = config('EMAIL_PORT', default='')   
