@@ -5,46 +5,56 @@ from django.contrib.auth.models import User
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from guardian.shortcuts import get_perms_for_model
-
+from allauth.account.models import EmailAddress
+from allauth.account.utils import send_email_confirmation
 
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
 
-class UserManager(BaseUserManager):
-    """
-    Custom user manager that creates and manages users with email as the
-    username field.
-    """
+# class UserManager(BaseUserManager):
+#     """
+#     Custom user manager that creates and manages users with email as the
+#     username field.
+#     """
+    
+#     def create_user(self, email, password=None, **extra_fields):
+#         """
+#         Creates and saves a User with the given email, password and extra fields.
+#         """
+#         if not email:
+#             raise ValueError("Users must have an email address")
 
-    def create_user(self, email, password=None, **extra_fields):
-        """
-        Creates and saves a User with the given email, password and extra fields.
-        """
-        if not email:
-            raise ValueError("Users must have an email address")
+#         email = self.normalize_email(email)
+#         user = self.model(email=email, **extra_fields)
+#         user.set_password(password)
+        
+#         # Check if the user is being created for the first time
+#         is_new_user = not self.model.objects.filter(email=email).exists()
+        
+#         user.save(using=self._db)
 
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+#         # Send verification email if it's a new user
+#         if is_new_user:
+#             send_email_confirmation(user, None, signup=True)
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        """
-        Creates and saves a SuperUser with the given email, password and extra fields.
-        """
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('is_active', True)
+#         return user
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+#     def create_superuser(self, email, password=None, **extra_fields):
+#         """
+#         Creates and saves a SuperUser with the given email, password and extra fields.
+#         """
+#         extra_fields.setdefault('is_staff', True)
+#         extra_fields.setdefault('is_superuser', True)
+#         extra_fields.setdefault('is_active', True)
 
-        return self.create_user(email, password, **extra_fields)
+#         if extra_fields.get('is_staff') is not True:
+#             raise ValueError('Superuser must have is_staff=True.')
+#         if extra_fields.get('is_superuser') is not True:
+#             raise ValueError('Superuser must have is_superuser=True.')
+
+#         return self.create_user(email, password, **extra_fields)
 
 
 
@@ -57,7 +67,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         unique=True,
     )
     is_staff = models.BooleanField(_("Staff status"), default=False)
-    is_active = models.BooleanField(_("Active"), default=False)
+    is_active = models.BooleanField(_("Active"), default=True)
     date_joined = models.DateTimeField(_("Date Joined"), auto_now_add=True)
     last_updated = models.DateTimeField(_("Last Updated"), auto_now=True)
     first_name = models.CharField(_("First Name"), max_length=150, blank=True)
@@ -100,7 +110,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             perm for perm in self.get_group_permissions(obj=obj)
         }
 
-    objects = UserManager()
+    objects = BaseUserManager()
 
     USERNAME_FIELD = "email"
 

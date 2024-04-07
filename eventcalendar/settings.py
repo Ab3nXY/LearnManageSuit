@@ -15,10 +15,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', default='default_secret_key')
 
+DEBUG = False
+
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
 ALLOWED_HOSTS = ["127.0.0.1", "learnmanagesuit.onrender.com"]
-yesEMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='')  
 EMAIL_PORT = config('EMAIL_PORT', default='')   
 EMAIL_USE_TLS = config('EMAIL_USE_TLS', default='') 
@@ -30,7 +32,6 @@ LOGIN_URL = 'accounts:signin'
 ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
-ACCOUNT_MAX_EMAIL_ADDRESSES = 3
 ACCOUNT_LOGOUT_REDIRECT_URL = "settings.LOGIN_URL"
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
@@ -43,12 +44,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "guardian",
     "calendarapp.apps.CalendarappConfig",
     "accounts",
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'guardian',
 ]
 
 MIDDLEWARE = [
@@ -137,7 +138,7 @@ MEDIA_URL = '/media/'
 
 # # Development-specific settings
 # DEBUG = config('DEBUG', default=True, cast=bool)
-DEBUG = True
+
 # if DEBUG:
 #     # Debug toolbar configuration
 #     INSTALLED_APPS += ['debug_toolbar']
