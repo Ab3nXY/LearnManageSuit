@@ -19,7 +19,7 @@ DEBUG = False
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
-ALLOWED_HOSTS = ["127.0.0.1", "learnmanagesuit.onrender.com"]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='')  
 EMAIL_PORT = config('EMAIL_PORT', default='')   
@@ -128,7 +128,7 @@ USE_TZ = False
 DEFAULT_FILE_STORAGE = 'django.core.files.storage.FileSystemStorage'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "staticfiles"),
+    os.path.join(BASE_DIR, "static"),
 ]
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
@@ -141,9 +141,9 @@ MEDIA_URL = '/media/'
 
 # if DEBUG:
 #     # Debug toolbar configuration
-#     INSTALLED_APPS += ['debug_toolbar']
-#     MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
-#     INTERNAL_IPS = ['127.0.0.1']
+INSTALLED_APPS += ['debug_toolbar']
+MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+INTERNAL_IPS = ['127.0.0.1']
 
 #     # Database for development environment
 #     DATABASES = {
@@ -164,5 +164,5 @@ DATABASES = {
             conn_max_age=600    
             )
         }
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
