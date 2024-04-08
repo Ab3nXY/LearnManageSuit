@@ -19,7 +19,7 @@ DEBUG = False
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'learnmanagesuit.onrender.com']
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST', default='')  
 EMAIL_PORT = config('EMAIL_PORT', default='')   
