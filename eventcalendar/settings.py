@@ -141,9 +141,9 @@ MEDIA_URL = '/media/'
 
 # if DEBUG:
 #     # Debug toolbar configuration
-INSTALLED_APPS += ['debug_toolbar']
-MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
-INTERNAL_IPS = ['127.0.0.1']
+# INSTALLED_APPS += ['debug_toolbar']
+# MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware']
+# INTERNAL_IPS = ['127.0.0.1']
 
 #     # Database for development environment
 #     DATABASES = {

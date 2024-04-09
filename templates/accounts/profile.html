@@ -40,7 +40,7 @@
             <div class="text-center flex-grow-1">
                 <div class="img-upload-container">
                     <div class="img-preview">
-                        <img src="{{ user.profile.image.url}}" alt="Current Profile Picture" class="img-thumbnail cursor-pointer" id="profile-upload" style="height: 200px; width: 200px; border-radius: 50%; margin-right: 20px; border-width: 3px; border-color: {{ user.profile.border_color }};">
+                        <img src="{{ user.profile.image.url }}" class="img-thumbnail cursor-pointer" id="profile-upload" style="height: 200px; width: 200px; border-radius: 50%; margin-right: 20px; border-width: 3px; border-color: {{ user.profile.border_color }};">
                         <label for="image" class="cursor-pointer">
                             <section type="submit" class="btn btn-secondary">Browse...</section>
                             <input type="file" class="d-none" id="image" name="image" onchange="previewImage(event)">

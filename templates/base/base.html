@@ -131,8 +131,8 @@
         <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
         <aside class="app-sidebar">
             <div class="app-sidebar__user">
-                <img src="{% if user.profile.image %}{{ user.profile.image.url}}{% else %}{% static 'profile_pics/default.jpg' %}{% endif %}"
-                alt="profile picture" style="border-radius: 50%; overflow: hidden; width: 80px; height: 80px;" class="circular-frame" height="80px" width="80px">
+                <img src="{{ user.profile.image.url}}"
+                 style="border-radius: 50%; overflow: hidden; width: 80px; height: 80px;" class="circular-frame" height="80px" width="80px">
                 <div>
                     <p class="app-sidebar__user-name" style="padding: 0 10px;">{{user.first_name}}</p>
                     <p class="app-sidebar__user-designation" style="padding: 0 15px;">{{user.last_name}}</p>
